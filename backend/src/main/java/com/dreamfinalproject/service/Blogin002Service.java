@@ -1,7 +1,8 @@
 package com.dreamfinalproject.service;
 
 import com.dreamfinalproject.dto.Blogin002RequestDTO;
+import com.dreamfinalproject.dto.Blogin002ResponseDTO;
 
 public interface Blogin002Service {
-    String login(Blogin002RequestDTO loginRequest);
+    Blogin002ResponseDTO login(Blogin002RequestDTO loginRequest);
 }

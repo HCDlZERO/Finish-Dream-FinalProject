@@ -1,6 +1,7 @@
 package com.dreamfinalproject.service;
 
 import com.dreamfinalproject.dto.RegisterRequest;
+import com.dreamfinalproject.dto.RegisterResponseDTO;
 import com.dreamfinalproject.repository.Bregister001Repository;
 import com.dreamfinalproject.service.Bregister001Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ public class Bregister001ServiceImpl implements Bregister001Service {
     @Autowired
     private Bregister001Repository bregister001Repository;
 
-    public String register(RegisterRequest request) {
+    public RegisterResponseDTO register(RegisterRequest request) {
         String role = request.getRole();
         String firstName = request.getFirstName();
         String lastName = request.getLastName();
@@ -24,20 +25,18 @@ public class Bregister001ServiceImpl implements Bregister001Service {
 
         boolean isRegistered = false;
 
-        if (role.equalsIgnoreCase("Resident")) {
-            // ส่งข้อมูลทั้งหมดไปยัง Repository
+        if (role.equalsIgnoreCase("Member")) {
             isRegistered = bregister001Repository.MemberRegister(firstName, lastName, email, phoneNumber, role, numberId, password, confirmPassword);
         } else if (role.equalsIgnoreCase("Officer") || role.equalsIgnoreCase("HeadOfficer") || role.equalsIgnoreCase("Technician")) {
-            // ส่งข้อมูลทั้งหมดไปยัง Repository
             isRegistered = bregister001Repository.OfficerRegister(firstName, lastName, email, phoneNumber, role, numberId, password, confirmPassword);
         } else {
-            return "บทบาทไม่ถูกต้อง";
+            return new RegisterResponseDTO("บทบาทไม่ถูกต้อง", false);
         }
 
         if (isRegistered) {
-            return "ลงทะเบียนสำเร็จ";
+            return new RegisterResponseDTO("ลงทะเบียนสำเร็จ", true);
         } else {
-            return "การลงทะเบียนล้มเหลว";
+            return new RegisterResponseDTO("การลงทะเบียนล้มเหลว", false);
         }
     }
 }

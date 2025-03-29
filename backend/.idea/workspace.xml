@@ -5,33 +5,68 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09c0ea19-4821-4d9e-903b-e2640edb9fc9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/NamjaiBackendApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/controller/Blogin002Controller.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/controller/Bregister001Controller.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/dto/Blogin002RequestDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/dto/Blogin002ResponseDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/dto/RegisterRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/entity/UsersInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/repository/Blogin002Repository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/repository/Bregister001Repository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Blogin002Service.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Blogin002ServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Bregister001Service.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Bregister001ServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/controller/OfficerMainB003Controller.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/dto/OfficerMainB003RequestDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/dto/OfficerMainB003ResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/dto/RegisterResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/entity/Bill.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/entity/OfficerInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/repository/OfficerMainB003Repository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/OfficerMainB003Service.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/OfficerMainB003ServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/TokenService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/util/TokenUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/controller/Blogin002Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/controller/Blogin002Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/controller/Bregister001Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/controller/Bregister001Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/dto/Blogin002ResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/dto/Blogin002ResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/entity/UsersInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/entity/UsersInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/repository/Blogin002Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/repository/Blogin002Repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/repository/Bregister001Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/repository/Bregister001Repository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Blogin002Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Blogin002Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Blogin002ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Blogin002ServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Bregister001Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Bregister001Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Bregister001ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/service/Bregister001ServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/NamjaiBackendApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/NamjaiBackendApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/controller/Blogin002Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/controller/Blogin002Controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/controller/Bregister001Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/controller/Bregister001Controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/dto/Blogin002RequestDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/dto/Blogin002RequestDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/dto/Blogin002ResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/dto/Blogin002ResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/dto/RegisterRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/dto/RegisterRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/entity/UsersInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/entity/UsersInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/repository/Blogin002Repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/repository/Blogin002Repository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/repository/Bregister001Repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/repository/Bregister001Repository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/service/Blogin002Service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/service/Blogin002Service.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/service/Blogin002ServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/service/Blogin002ServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/service/Bregister001Service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/service/Bregister001Service.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/service/Bregister001ServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/service/Bregister001ServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/android/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="Coding" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -48,24 +83,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.NamjaiBackendApplication.executor": "Run",
-    "Maven.Unknown [clean].executor": "Run",
-    "Maven.Unknown [install].executor": "Run",
-    "Maven.namjai-backend [clean].executor": "Run",
-    "Maven.namjai-backend [install].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/aveng/Documents/Dream-FinalProject/Final-Project-Dev/backend"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.NamjaiBackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Unknown [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Unknown [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.namjai-backend [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.namjai-backend [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.namjai-backend [test].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.namjai-backend [verify].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/aveng/Documents/Dream-FinalProject/Final-Project-Dev/backend&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="com.dreamfinalproject.filter" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.dreamfinalproject.dto" />
     </key>
   </component>
   <component name="RunManager">
@@ -85,8 +128,19 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.NamjaiBackendApplication" />
+        <item itemvalue="Application.NamjaiBackendApplication" />
+        <item itemvalue="Application.NamjaiBackendApplication" />
+        <item itemvalue="Application.NamjaiBackendApplication" />
+        <item itemvalue="Application.NamjaiBackendApplication" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-20.0.2-corretto-20.0.2.1-4caba194b151-5bc9ecd2" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -98,6 +152,17 @@
       <updated>1733253760501</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

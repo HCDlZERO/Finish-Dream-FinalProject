@@ -4,10 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class UsersInfo {
+public class OfficerInfo {
 
     @Id
-    private Integer User_id;
+    private Integer Officer_id;
     private String firstName;
     private String lastName;
     private String email;
@@ -16,12 +16,12 @@ public class UsersInfo {
     private String numberId;
     private String password;
 
-    public Integer getUser_id() {
-        return User_id;
+    public Integer getOfficer_id() {
+        return Officer_id;
     }
 
-    public void setUser_id(Integer User_id) {
-        this.User_id = User_id;
+    public void setOfficer_id(Integer Officer_id) {
+        this.Officer_id = Officer_id;
     }
 
     public String getFirstName() {
@@ -80,3 +80,4 @@ public class UsersInfo {
         this.password = password;
     }
 }
+
