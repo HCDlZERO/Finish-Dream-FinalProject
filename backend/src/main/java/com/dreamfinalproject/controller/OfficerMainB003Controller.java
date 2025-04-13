@@ -68,6 +68,13 @@ public class OfficerMainB003Controller {
         return ResponseEntity.ok("Payment confirmed successfully.");
     }
 
+    @PostMapping("/Deleteusers")
+    public ResponseEntity<String> deleteUser(@RequestBody OfficerMainB003RequestDTO requestDTO) {
+        service.deleteUser(requestDTO);
+        return ResponseEntity.ok("User deleted (recorded) successfully.");
+    }
+
+
 
 
 }

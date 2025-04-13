@@ -145,12 +145,10 @@ public class OfficerMainB003Repository {
     public List<OfficerMainB003ResponseDTO> getBillsByNumberId(String numberId) {
         List<OfficerMainB003ResponseDTO> bills = new ArrayList<>();
         String billSql = """
-        SELECT TOP 1 * FROM Bills 
-        WHERE Number_id = ? 
-          AND MONTH(Bill_date) = MONTH(GETDATE())
-          AND YEAR(Bill_date) = YEAR(GETDATE())
-        ORDER BY Bill_date DESC
-    """;
+    SELECT TOP 1 * FROM Bills 
+    WHERE Number_id = ?
+    ORDER BY Bill_date DESC
+""";
         String memberSql = "SELECT First_name, Last_name FROM Members WHERE Number_id = ?";
 
         try (Connection connection = dataSource.getConnection();
@@ -167,6 +165,8 @@ public class OfficerMainB003Repository {
                     bill.setUnitsUsed(billResultSet.getDouble("Units_used"));
                     bill.setAmountDue(billResultSet.getDouble("Amount_due"));
                     bill.setPaymentStatus(billResultSet.getString("Payment_status"));
+                    bill.setCash(billResultSet.getString("Cash"));
+                    bill.setCashTime(billResultSet.getString("Cash_time"));
                     bills.add(bill);
                 }
             }
@@ -241,7 +241,7 @@ public class OfficerMainB003Repository {
 
         String sql = """
         SELECT First_name, Last_name, Amount_due, Confirm_date, Confirm_time, Officer_name, Confirm_image
-        FROM bills_Comfrim
+        FROM Bills_Comfrim
         WHERE First_name = ? AND Last_name = ?
     """;
 
@@ -309,6 +309,101 @@ public class OfficerMainB003Repository {
         }
     }
 
+    public void insertDeletedMember(OfficerMainB003RequestDTO dto) {
+        String sql = """
+        INSERT INTO delete_members (Number_id, First_name, Last_name)
+        VALUES (?, ?, ?)
+    """;
 
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, dto.getNumberId());
+            preparedStatement.setString(2, dto.getFirstName());
+            preparedStatement.setString(3, dto.getLastName());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePaymentStatusLatest(String numberId, String status) {
+        String sql = """
+        UPDATE Bills
+        SET payment_status = ?
+        WHERE number_id = ?
+          AND bill_date = (
+              SELECT MAX(bill_date)
+              FROM Bills
+              WHERE number_id = ?
+          )
+    """;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, status);
+            statement.setString(2, numberId);
+            statement.setString(3, numberId);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void addPenaltyToLatestBill(String numberId, double penalty) {
+        String sql = """
+        UPDATE Bills
+        SET cash = COALESCE(cash, 0) + ?
+        WHERE number_id = ?
+          AND bill_date = (
+              SELECT MAX(bill_date)
+              FROM Bills
+              WHERE number_id = ?
+          )
+    """;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setDouble(1, penalty);
+            statement.setString(2, numberId);
+            statement.setString(3, numberId);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void addToAmountDueLatestBill(String numberId, double amount) {
+        String sql = """
+        UPDATE Bills
+        SET amount_due = amount_due + ?
+        WHERE number_id = ?
+          AND bill_date = (
+              SELECT MAX(bill_date)
+              FROM Bills
+              WHERE number_id = ?
+          )
+    """;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setDouble(1, amount);
+            statement.setString(2, numberId);
+            statement.setString(3, numberId);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

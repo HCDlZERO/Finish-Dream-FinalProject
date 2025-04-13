@@ -20,5 +20,8 @@ public interface OfficerMainB003Service {
 
     void confirmPayment(String firstName, String lastName);
 
+    void deleteUser(OfficerMainB003RequestDTO requestDTO);
+
+
 
 }

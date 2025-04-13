@@ -25,7 +25,10 @@ public class Blogin002ServiceImpl implements Blogin002Service {
                     loginRequest.getPassword(),
                     loginRequest.getRole()
             );
-        } else if ("Officer".equals(loginRequest.getRole())) {
+        } else if ("Officer".equals(loginRequest.getRole())
+                || "Technician".equals(loginRequest.getRole())
+                || "HeadOfficer".equals(loginRequest.getRole())) {
+
             userRoleAndId = blogin002Repository.findOfficerRole(
                     loginRequest.getUsername(),
                     loginRequest.getPassword(),
@@ -33,10 +36,13 @@ public class Blogin002ServiceImpl implements Blogin002Service {
             );
         }
 
+
         if (userRoleAndId != null) {
             if ("Member".equals(userRoleAndId[0])) {
                 return loginMember(loginRequest, userRoleAndId);
-            } else if ("Officer".equals(userRoleAndId[0])) {
+            } else if ("Officer".equals(userRoleAndId[0])
+                    || "Technician".equals(userRoleAndId[0])
+                    || "HeadOfficer".equals(userRoleAndId[0])) {
                 return loginOfficer(loginRequest, userRoleAndId);
             }
         }

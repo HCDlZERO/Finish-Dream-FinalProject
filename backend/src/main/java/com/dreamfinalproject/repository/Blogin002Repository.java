@@ -29,7 +29,7 @@ public class Blogin002Repository {
             return jdbcTemplate.queryForObject(sql, new Object[]{username, username, password, role},
                     (rs, rowNum) -> new String[]{rs.getString("Role"), rs.getString("officer_id")});
         } catch (EmptyResultDataAccessException e) {
-            return null; // หากไม่พบข้อมูลที่ตรงกับคำค้นหา
+            return null; // หากไม่พบข้อมูลที่ตรงกับคำค้นหา 
         }
     }
 }

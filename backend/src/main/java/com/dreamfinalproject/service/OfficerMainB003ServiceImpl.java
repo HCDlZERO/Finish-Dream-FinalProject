@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Date;
+import java.time.ZoneId;
+
 
 @Service
 public class OfficerMainB003ServiceImpl implements OfficerMainB003Service {
@@ -17,55 +20,59 @@ public class OfficerMainB003ServiceImpl implements OfficerMainB003Service {
 
     @Override
     public List<OfficerMainB003ResponseDTO> getUsersByOfficerId(String officerId) {
-        // 1. ดึง number_id จาก officer_info โดยใช้ officerId
         String numberId = repository.getNumberIdByOfficerId(officerId);
-
-        // 2. ใช้ numberId เพื่อ Query หา Zone จาก Officers
         int zone = repository.getZoneByNumberId(numberId);
-
-        // 3. คำนวณวันที่เพื่อใช้ใน Query บิล
-        LocalDate today = LocalDate.now();
-        LocalDate firstDayOfCurrentMonth = today.withDayOfMonth(1);
-        LocalDate lastDayOfPreviousMonth = firstDayOfCurrentMonth.minusDays(1);
-
-        // 4. ดึงข้อมูล Users และ Bills ตาม Zone
         List<OfficerMainB003ResponseDTO> users = repository.getUsersByZoneWithBills(zone);
 
-        // 5. ตรวจสอบและอัปเดตสถานะการจ่ายเงิน
+        LocalDate today = LocalDate.now();
+
         for (OfficerMainB003ResponseDTO user : users) {
             if (user.getBillDate() == null) {
                 user.setMessage("ไม่มีข้อมูลบิล");
+                continue;
+            }
+
+            String paymentStatus = user.getPaymentStatus();
+            if ("Green".equalsIgnoreCase(paymentStatus)) continue;
+
+            // ✅ แปลงเป็น LocalDate อย่างปลอดภัย
+            LocalDate billDate;
+            Object raw = user.getBillDate();
+            if (raw instanceof java.sql.Date) {
+                billDate = ((java.sql.Date) raw).toLocalDate();
+            } else if (raw instanceof java.util.Date) {
+                billDate = ((java.util.Date) raw).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             } else {
-                String paymentStatus = user.getPaymentStatus();
+                user.setMessage("ไม่สามารถแปลงวันที่บิลได้");
+                continue;
+            }
 
-                // ✅ ห้ามแก้ถ้าเป็น Green
-                if ("Green".equals(paymentStatus)) {
-                    continue;
-                }
+            // ✅ เริ่มนับระยะเวลาชำระจากวันถัดจาก billDate
+            LocalDate paymentStartDate = billDate.plusDays(1);
 
-                // ✅ เช็กว่าเป็น 2 วันสุดท้ายของเดือน
-                int lastDay = today.lengthOfMonth(); // วันสุดท้ายของเดือน
-                boolean isLastTwoDays = today.getDayOfMonth() >= (lastDay - 1);
+            // ✅ ข้าม 2 วันสุดท้ายของเดือน (กันระบบตรวจสอบผิดช่วง)
+            boolean isLastTwoDays = today.getDayOfMonth() >= today.lengthOfMonth() - 1;
+            if (isLastTwoDays) continue;
 
-                // ✅ ถ้าไม่ใช่ 2 วันสุดท้ายของเดือน และ status ยังเป็น Gray หรือ Yellow
-                if (!isLastTwoDays && ("Gray".equals(paymentStatus) || "Yellow".equals(paymentStatus))) {
-
-                    if (today.isAfter(firstDayOfCurrentMonth.plusDays(7))) {
-                        user.setPaymentStatus("Orange");
-                        repository.updatePaymentStatus(user.getNumberId(), "Orange");
-
-                        if (today.isAfter(firstDayOfCurrentMonth.plusDays(14))) {
-                            user.setPaymentStatus("Red");
-                            repository.updatePaymentStatus(user.getNumberId(), "Red");
-                        }
-                    }
+            // ✅ ตรวจเงื่อนไขเปลี่ยนเป็น Orange หรือ Red
+            if ("Gray".equalsIgnoreCase(paymentStatus) || "Yellow".equalsIgnoreCase(paymentStatus)) {
+                if (today.isAfter(paymentStartDate.plusDays(7)) && today.isBefore(paymentStartDate.plusDays(15))) {
+                    user.setPaymentStatus("Orange");
+                    repository.updatePaymentStatusLatest(user.getNumberId(), "Orange");
+                    repository.addPenaltyToLatestBill(user.getNumberId(), 200);
+                    repository.addToAmountDueLatestBill(user.getNumberId(), 200);
+                } else if (today.isAfter(paymentStartDate.plusDays(14))) {
+                    user.setPaymentStatus("Red");
+                    repository.updatePaymentStatusLatest(user.getNumberId(), "Red");
+                    repository.addPenaltyToLatestBill(user.getNumberId(), 300);
+                    repository.addToAmountDueLatestBill(user.getNumberId(), 300);
                 }
             }
         }
 
-
         return users;
     }
+
     public void saveBill(OfficerMainB003RequestDTO requestDTO) {
         LocalDate today = LocalDate.now();
         LocalDate firstDayOfCurrentMonth = today.withDayOfMonth(1);
@@ -105,6 +112,12 @@ public class OfficerMainB003ServiceImpl implements OfficerMainB003Service {
     public void confirmPayment(String firstName, String lastName) {
         repository.confirmPaymentByName(firstName, lastName);
     }
+
+    @Override
+    public void deleteUser(OfficerMainB003RequestDTO requestDTO) {
+        repository.insertDeletedMember(requestDTO);
+    }
+
 
 
 }

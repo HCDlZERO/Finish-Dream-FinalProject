@@ -19,4 +19,7 @@ public class OfficerMainB003ResponseDTO {
     private String confirmTime;
     private String officerName;
     private String confirmImage;
+    private String cash;
+    private String cashTime;
+
 }
