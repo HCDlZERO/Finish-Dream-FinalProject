@@ -54,9 +54,9 @@ public class HeadMainB005Repository {
 
     public void insertOfficer(HeadMainB005RequestDTO dto) {
         String sql = """
-            INSERT INTO Officers (Number_id, First_name, Last_name, Role, Zone_id)
-            VALUES (?, ?, ?, ?, ?)
-        """;
+        INSERT INTO Officers (Number_id, First_name, Last_name, Role, Zone_id, qr_code)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """;
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, dto.getNumberId());
@@ -64,11 +64,13 @@ public class HeadMainB005Repository {
             stmt.setString(3, dto.getLastName());
             stmt.setString(4, dto.getRole());
             stmt.setInt(5, dto.getZoneId());
+            stmt.setString(6, dto.getQrCode()); // base64 QR code
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     public void copyRequestToMembers(String numberId) {
         String sql = """

@@ -21,5 +21,12 @@ public class OfficerMainB003ResponseDTO {
     private String confirmImage;
     private String cash;
     private String cashTime;
+    private String qrCode;
+    private String lineId;
+    private String bank;
+    private String bankId;
+
+// + getters & setters
+
 
 }

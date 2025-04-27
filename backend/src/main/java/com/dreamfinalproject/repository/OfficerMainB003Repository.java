@@ -406,4 +406,108 @@ public class OfficerMainB003Repository {
         }
     }
 
+    public String getPenalizedLevelLatest(String numberId) {
+        String sql = """
+        SELECT Penalized_Level
+        FROM Bills
+        WHERE number_id = ?
+          AND bill_date = (
+              SELECT MAX(bill_date)
+              FROM Bills
+              WHERE number_id = ?
+          )
+    """;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, numberId);
+            statement.setString(2, numberId);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("Penalized_Level");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void updatePenalizedLevelLatest(String numberId, String level) {
+        String sql = """
+        UPDATE Bills
+        SET Penalized_Level = ?
+        WHERE number_id = ?
+          AND bill_date = (
+              SELECT MAX(bill_date)
+              FROM Bills
+              WHERE number_id = ?
+          )
+    """;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, level);
+            statement.setString(2, numberId);
+            statement.setString(3, numberId);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public boolean updateOfficerInfo(OfficerMainB003RequestDTO dto) {
+        StringBuilder sql = new StringBuilder("UPDATE officer_info SET ");
+        List<Object> params = new ArrayList<>();
+
+        if (dto.getQrCode() != null) {
+            sql.append("qr_code = ?, ");
+            params.add(dto.getQrCode());
+        }
+        if (dto.getLineId() != null) {
+            sql.append("Line_id = ?, ");
+            params.add(dto.getLineId());
+        }
+        if (dto.getBank() != null) {
+            sql.append("Bank = ?, ");
+            params.add(dto.getBank());
+        }
+        if (dto.getBankId() != null) {
+            sql.append("Bank_id = ?, ");
+            params.add(dto.getBankId());
+        }
+
+        // ✅ ถ้าไม่มี field ให้ update
+        if (params.isEmpty()) return false;
+
+        // ลบคอมมาท้ายสุด
+        sql.setLength(sql.length() - 2);
+        sql.append(" WHERE officer_id = ?");
+        params.add(dto.getOfficerId()); // เปลี่ยนจาก numberId → officerId
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+
+            int affected = statement.executeUpdate();
+            return affected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
 }

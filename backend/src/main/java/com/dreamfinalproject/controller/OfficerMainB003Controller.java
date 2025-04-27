@@ -73,6 +73,21 @@ public class OfficerMainB003Controller {
         service.deleteUser(requestDTO);
         return ResponseEntity.ok("User deleted (recorded) successfully.");
     }
+    @PostMapping("/updateOfficerInfo")
+    public ResponseEntity<String> updateOfficerInfo(@RequestBody OfficerMainB003RequestDTO requestDTO) {
+        try {
+            boolean updated = service.updateOfficerInfo(requestDTO);
+            if (updated) {
+                return ResponseEntity.ok("Officer info updated successfully.");
+            } else {
+                return ResponseEntity.badRequest().body("No valid data provided to update.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating officer info: " + e.getMessage());
+        }
+    }
+
 
 
 

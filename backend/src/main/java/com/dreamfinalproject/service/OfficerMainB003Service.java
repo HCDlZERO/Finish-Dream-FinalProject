@@ -22,6 +22,9 @@ public interface OfficerMainB003Service {
 
     void deleteUser(OfficerMainB003RequestDTO requestDTO);
 
+    boolean updateOfficerInfo(OfficerMainB003RequestDTO requestDTO);
+
+
 
 
 }

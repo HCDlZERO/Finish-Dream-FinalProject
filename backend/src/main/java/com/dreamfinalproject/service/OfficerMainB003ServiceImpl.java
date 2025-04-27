@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Date;
 import java.time.ZoneId;
@@ -25,6 +26,7 @@ public class OfficerMainB003ServiceImpl implements OfficerMainB003Service {
         List<OfficerMainB003ResponseDTO> users = repository.getUsersByZoneWithBills(zone);
 
         LocalDate today = LocalDate.now();
+        List<String> updatableStatuses = Arrays.asList("Gray", "Yellow", "Orange");
 
         for (OfficerMainB003ResponseDTO user : users) {
             if (user.getBillDate() == null) {
@@ -35,7 +37,7 @@ public class OfficerMainB003ServiceImpl implements OfficerMainB003Service {
             String paymentStatus = user.getPaymentStatus();
             if ("Green".equalsIgnoreCase(paymentStatus)) continue;
 
-            // ✅ แปลงเป็น LocalDate อย่างปลอดภัย
+            // ✅ แปลงวันที่บิลให้เป็น LocalDate อย่างปลอดภัย
             LocalDate billDate;
             Object raw = user.getBillDate();
             if (raw instanceof java.sql.Date) {
@@ -47,31 +49,46 @@ public class OfficerMainB003ServiceImpl implements OfficerMainB003Service {
                 continue;
             }
 
-            // ✅ เริ่มนับระยะเวลาชำระจากวันถัดจาก billDate
+            // ✅ เริ่มนับระยะเวลาชำระจากวันถัดจากวันที่ออกบิล
             LocalDate paymentStartDate = billDate.plusDays(1);
 
-            // ✅ ข้าม 2 วันสุดท้ายของเดือน (กันระบบตรวจสอบผิดช่วง)
+            // ✅ ข้าม 2 วันสุดท้ายของเดือนเพื่อป้องกันการเปลี่ยนสถานะผิดเวลา
             boolean isLastTwoDays = today.getDayOfMonth() >= today.lengthOfMonth() - 1;
             if (isLastTwoDays) continue;
 
-            // ✅ ตรวจเงื่อนไขเปลี่ยนเป็น Orange หรือ Red
-            if ("Gray".equalsIgnoreCase(paymentStatus) || "Yellow".equalsIgnoreCase(paymentStatus)) {
-                if (today.isAfter(paymentStartDate.plusDays(7)) && today.isBefore(paymentStartDate.plusDays(15))) {
-                    user.setPaymentStatus("Orange");
-                    repository.updatePaymentStatusLatest(user.getNumberId(), "Orange");
-                    repository.addPenaltyToLatestBill(user.getNumberId(), 200);
-                    repository.addToAmountDueLatestBill(user.getNumberId(), 200);
-                } else if (today.isAfter(paymentStartDate.plusDays(14))) {
-                    user.setPaymentStatus("Red");
-                    repository.updatePaymentStatusLatest(user.getNumberId(), "Red");
-                    repository.addPenaltyToLatestBill(user.getNumberId(), 300);
-                    repository.addToAmountDueLatestBill(user.getNumberId(), 300);
-                }
+            // ✅ ดึง Penalized_Level ล่าสุด
+            String penalized = repository.getPenalizedLevelLatest(user.getNumberId());
+
+            // ✅ 15 วันขึ้นไป → Red (ถ้ายังไม่เคยเป็น Red)
+            if (today.isAfter(paymentStartDate.plusDays(14)) &&
+                    (penalized == null || !penalized.equalsIgnoreCase("Red"))) {
+
+                user.setPaymentStatus("Red");
+                repository.updatePaymentStatusLatest(user.getNumberId(), "Red");
+                repository.addPenaltyToLatestBill(user.getNumberId(), 300);
+                repository.addToAmountDueLatestBill(user.getNumberId(), 300);
+                repository.updatePenalizedLevelLatest(user.getNumberId(), "Red");
+
+            }
+            // ✅ 8-14 วัน → Orange (ถ้ายังไม่เคยเป็น Orange/Red)
+            else if (
+                    today.isAfter(paymentStartDate.plusDays(7)) &&
+                            today.isBefore(paymentStartDate.plusDays(15)) &&
+                            updatableStatuses.contains(paymentStatus) &&
+                            (penalized == null || (!penalized.equalsIgnoreCase("Orange") && !penalized.equalsIgnoreCase("Red")))
+            ) {
+                user.setPaymentStatus("Orange");
+                repository.updatePaymentStatusLatest(user.getNumberId(), "Orange");
+                repository.addPenaltyToLatestBill(user.getNumberId(), 200);
+                repository.addToAmountDueLatestBill(user.getNumberId(), 200);
+                repository.updatePenalizedLevelLatest(user.getNumberId(), "Orange");
             }
         }
 
         return users;
     }
+
+
 
     public void saveBill(OfficerMainB003RequestDTO requestDTO) {
         LocalDate today = LocalDate.now();
@@ -117,6 +134,12 @@ public class OfficerMainB003ServiceImpl implements OfficerMainB003Service {
     public void deleteUser(OfficerMainB003RequestDTO requestDTO) {
         repository.insertDeletedMember(requestDTO);
     }
+
+    @Override
+    public boolean updateOfficerInfo(OfficerMainB003RequestDTO dto) {
+        return repository.updateOfficerInfo(dto);
+    }
+
 
 
 

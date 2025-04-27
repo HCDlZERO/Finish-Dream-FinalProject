@@ -7,6 +7,8 @@ public class HeadMainB005RequestDTO {
     private String role;     // ต้องเป็น "Officer" หรือ "Technician"
     private int zoneId;
 
+    private String qrCode;
+
     // Getters and Setters
 
     public String getNumberId() {
@@ -47,5 +49,13 @@ public class HeadMainB005RequestDTO {
 
     public void setZoneId(int zoneId) {
         this.zoneId = zoneId;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 }

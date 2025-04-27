@@ -25,4 +25,9 @@ public class OfficerMainB003RequestDTO {
     private String role;
     private LocalDate registrationDate;
     private int zone;
+    private String lineId;
+    private String bank;
+    private String bankId;
+    private String qrCode;
+
 }
