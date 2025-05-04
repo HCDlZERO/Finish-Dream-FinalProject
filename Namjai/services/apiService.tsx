@@ -515,22 +515,44 @@ export const deleteUser = async ({ numberId, firstName, lastName }: { numberId: 
   }
 };
 
+export const requestOtp = async (email: string) => {
+  try {
+    const response = await fetch('http://10.0.2.2:8082/api/otp007/request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('❌ Error requesting OTP:', error);
+    throw error;
+  }
+};
 
+export const verifyOtp = async (email: string, otpCode: string) => {
+  try {
+    const response = await fetch('http://10.0.2.2:8082/api/otp007/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otpCode }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('❌ Error verifying OTP:', error);
+    throw error;
+  }
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export const resetPassword = async (email: string, newPassword: string) => {
+  try {
+    const response = await fetch('http://10.0.2.2:8082/api/otp007/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, newPassword }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('❌ Error resetting password:', error);
+    throw error;
+  }
+};

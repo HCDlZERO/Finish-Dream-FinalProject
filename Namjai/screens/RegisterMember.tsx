@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  Alert,
+  Pressable,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { registerUser } from '../services/apiService';
 
 const RegisterMember = ({ navigation }: any) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
+    phoneNumber: '',
     email: '',
     password: '',
     confirmPassword: '',
-    phoneNumber: '',
     numberId: '',
   });
 
@@ -19,12 +29,10 @@ const RegisterMember = ({ navigation }: any) => {
 
   const handleRegister = async () => {
     try {
-      const response = await registerUser({ ...formData, role: 'Member' }); // ส่งข้อมูลไปยัง API
-      console.log('API Response:', response);
-
+      const response = await registerUser({ ...formData, role: 'Member' });
       if (response.message === 'ลงทะเบียนสำเร็จ') {
         Alert.alert('สำเร็จ', response.message, [
-          { text: 'OK', onPress: () => navigation.navigate('Login') }, // Navigate to Login
+          { text: 'OK', onPress: () => navigation.navigate('Login') },
         ]);
       } else {
         Alert.alert('Error', response.message || 'เกิดข้อผิดพลาด');
@@ -36,26 +44,92 @@ const RegisterMember = ({ navigation }: any) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Register Member</Text>
-      {Object.keys(formData).map((key) => (
-        <TextInput
-          key={key}
-          style={styles.input}
-          placeholder={key}
-          secureTextEntry={key.includes('password')}
-          onChangeText={(value) => handleChange(key, value)}
-        />
-      ))}
-      <Button title="Register" onPress={handleRegister} />
-    </View>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.header}>Create new{'\n'}Account</Text>
+        <Text style={styles.subtext}>Already Registered? Log in here.</Text>
+
+        {[
+          { key: 'firstName', label: 'NAME' },
+          { key: 'lastName', label: 'SURNAME' },
+          { key: 'phoneNumber', label: 'NUMBER PHONE' },
+          { key: 'email', label: 'EMAIL' },
+          { key: 'password', label: 'PASSWORD' },
+          { key: 'confirmPassword', label: 'CONFIRM PASSWORD' },
+        ].map(({ key, label }) => (
+          <View key={key} style={styles.inputContainer}>
+            <Text style={styles.label}>{label}</Text>
+            <TextInput
+              placeholder={label}
+              placeholderTextColor="#ffffff"
+              style={styles.input}
+              secureTextEntry={key.includes('password')}
+              onChangeText={(value) => handleChange(key, value)}
+            />
+          </View>
+        ))}
+
+        <Pressable style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>SIGN UP</Text>
+        </Pressable>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, justifyContent: 'center' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
-  input: { borderWidth: 1, marginBottom: 10, padding: 8, borderRadius: 5, borderColor: '#ccc' },
+  container: {
+    padding: 20,
+    paddingTop: 60,
+    backgroundColor: '#42b8d3', // สามารถใช้ Gradient จริงในโปรเจกต์จริง
+    flexGrow: 1,
+  },
+  header: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#fff',
+    marginBottom: 5,
+  },
+  subtext: {
+    fontSize: 12,
+    color: '#e0f7fa',
+    textAlign: 'center',
+    marginBottom: 30,
+  },
+  inputContainer: {
+    marginBottom: 12,
+  },
+  label: {
+    fontSize: 12,
+    color: '#ffffff',
+    marginBottom: 6,
+    marginLeft: 8,
+  },
+  input: {
+    backgroundColor: '#81d4fa',
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    fontSize: 16,
+    color: '#000',
+  },
+  button: {
+    backgroundColor: '#b0bec5',
+    borderRadius: 30,
+    marginTop: 20,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textTransform: 'uppercase',
+  },
 });
 
 export default RegisterMember;

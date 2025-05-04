@@ -31,6 +31,7 @@ import HistoryPage from './screens/HistoryPage';
 import ContactOfficerPage from './screens/ContactOfficerPage';
 import UserProfilePage from './screens/UserProfilePage'; // ✅ เพิ่มตรงนี้
 import DeleteMemberPage from './screens/DeleteMemberPage'; // ✅ เพิ่มตรงนี้
+import ResetPasswordPage from './screens/ResetPasswordPage';
 
 
 const Stack = createStackNavigator();
@@ -82,6 +83,7 @@ function App(): React.JSX.Element {
         <Stack.Screen name="ContactOfficerPage" component={ContactOfficerPage} options={{ title: 'Contact Officer' }} />
         <Stack.Screen name="UserProfilePage" component={UserProfilePage} options={{ title: 'User Profile' }} />
         <Stack.Screen name="DeleteMemberPage" component={DeleteMemberPage} options={{ title: 'Delete Member' }} />
+        <Stack.Screen name="ResetPasswordPage" component={ResetPasswordPage} options={{ title: 'Reset Password' }} />
 
       </Stack.Navigator>
     </NavigationContainer>

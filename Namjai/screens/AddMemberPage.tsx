@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import {
-  View, Text, TextInput, Button, Alert, ScrollView, StyleSheet,
+  View, Text, TextInput, Alert, ScrollView,
+  StyleSheet, TouchableOpacity
 } from 'react-native';
-import { addUser } from '../services/apiService'; // ✅ เรียกใช้ API จาก service
+import { addUser } from '../services/apiService';
 
 const AddMemberPage = () => {
   const [form, setForm] = useState({
@@ -29,7 +30,7 @@ const AddMemberPage = () => {
         ...form,
         zone: parseInt(form.zone),
       };
-      await addUser(payload); // ✅ เรียกผ่าน service
+      await addUser(payload);
       Alert.alert('สำเร็จ', 'เพิ่มสมาชิกเรียบร้อยแล้ว');
       setForm({ ...form, numberId: '', firstName: '', lastName: '', houseNumber: '', street: '', district: '', city: '', postalCode: '', zone: '' });
     } catch (error) {
@@ -40,7 +41,7 @@ const AddMemberPage = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>เพิ่มสมาชิกใหม่</Text>
+      <Text style={styles.title}>➕ เพิ่มสมาชิกใหม่</Text>
 
       {[
         { label: 'เลขสมาชิก (numberId)', key: 'numberId' },
@@ -59,24 +60,32 @@ const AddMemberPage = () => {
             style={styles.input}
             value={form[key as keyof typeof form]}
             onChangeText={(value) => handleChange(key, value)}
+            placeholder={`กรอก ${label}`}
+            placeholderTextColor="#aaa"
           />
         </View>
       ))}
 
-      <Button title="เพิ่มสมาชิก" onPress={handleSubmit} />
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>✅ เพิ่มสมาชิก</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
 
+export default AddMemberPage;
+
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#e3f2fd',
+    flexGrow: 1,
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#01579b',
+    marginBottom: 25,
     textAlign: 'center',
   },
   inputGroup: {
@@ -84,16 +93,35 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    marginBottom: 5,
-    color: '#555',
+    fontWeight: '600',
+    color: '#455a64',
+    marginBottom: 6,
   },
   input: {
+    backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ccc',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
+    fontSize: 16,
+    color: '#263238',
+  },
+  button: {
+    backgroundColor: '#1976d2',
+    paddingVertical: 14,
+    borderRadius: 30,
+    marginTop: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 5,
+    elevation: 4,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
-
-export default AddMemberPage;

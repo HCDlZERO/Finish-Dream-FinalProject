@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import {
-  View, Text, TextInput, Button, StyleSheet, Image, Alert
+  View, Text, TextInput, Alert, StyleSheet,
+  Image, TouchableOpacity, ScrollView
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { updateOfficerInfo } from '../services/apiService';
 
 const SettingOfficerInfo = ({ route }: any) => {
-  const { officerId } = route.params; // ✅ ใช้ officerId แทน numberId
+  const { officerId } = route.params;
 
   const [lineId, setLineId] = useState('');
   const [bank, setBank] = useState('');
@@ -19,7 +20,7 @@ const SettingOfficerInfo = ({ route }: any) => {
       mediaType: 'photo',
       includeBase64: true,
       maxWidth: 800,
-      quality: 0.8
+      quality: 0.8,
     });
 
     if (result.assets && result.assets.length > 0) {
@@ -53,8 +54,8 @@ const SettingOfficerInfo = ({ route }: any) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>ตั้งค่าข้อมูลเจ้าหน้าที่</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>⚙️ ตั้งค่าข้อมูลเจ้าหน้าที่</Text>
 
       <TextInput
         style={styles.input}
@@ -76,26 +77,85 @@ const SettingOfficerInfo = ({ route }: any) => {
         keyboardType="numeric"
       />
 
-      <Button title="เลือกรูป QR Code" onPress={handlePickImage} />
+      <TouchableOpacity style={styles.imagePicker} onPress={handlePickImage}>
+        <Text style={styles.imagePickerText}>📷 เลือกรูป QR Code</Text>
+      </TouchableOpacity>
+
       {qrImageUri !== '' && (
-        <Image source={{ uri: qrImageUri }} style={{ width: 200, height: 200, marginVertical: 10 }} />
+        <Image
+          source={{ uri: qrImageUri }}
+          style={styles.qrImage}
+          resizeMode="contain"
+        />
       )}
 
-      <Button title="💾 บันทึกข้อมูล" onPress={handleSubmit} color="#2196F3" />
-    </View>
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.submitButtonText}>💾 บันทึกข้อมูล</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 
+export default SettingOfficerInfo;
+
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
+  container: {
+    padding: 20,
+    backgroundColor: '#e3f2fd',
+    flexGrow: 1,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#01579b',
+    marginBottom: 25,
+    textAlign: 'center',
+  },
   input: {
+    backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 6,
-    marginBottom: 15
-  }
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
+    fontSize: 16,
+    color: '#263238',
+    marginBottom: 15,
+  },
+  imagePicker: {
+    backgroundColor: '#4fc3f7',
+    borderRadius: 20,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  imagePickerText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  qrImage: {
+    width: '100%',
+    height: 220,
+    borderRadius: 10,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 4,
+  },
+  submitButton: {
+    backgroundColor: '#388e3c',
+    paddingVertical: 14,
+    borderRadius: 30,
+    alignItems: 'center',
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
 });
-
-export default SettingOfficerInfo;
