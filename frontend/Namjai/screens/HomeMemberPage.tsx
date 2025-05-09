@@ -7,12 +7,13 @@ import { useNavigation } from '@react-navigation/native';
 const HomeMemberPage = () => {
   const navigation = useNavigation();
   const [amountDue, setAmountDue] = useState<number | null>(null);
-  const [dueDate, setDueDate] = useState<string>('7 พฤศจิกายน 2567');
   const [officerId, setOfficerId] = useState<number | null>(null);
   const [collectionOfficerId, setCollectionOfficerId] = useState<number | null>(null);
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [numberId, setNumberId] = useState<string>('');
+  const [paymentStatus, setPaymentStatus] = useState<string>(''); // ✅
+  const [billDate, setBillDate] = useState<string>(''); // ✅
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -41,6 +42,8 @@ const HomeMemberPage = () => {
             if (latestBill.last_name) setLastName(latestBill.last_name);
             if (latestBill.collection_officer_id != null) setCollectionOfficerId(latestBill.collection_officer_id);
             if (latestBill.number_id) setNumberId(latestBill.number_id);
+            if (latestBill.payment_status) setPaymentStatus(latestBill.payment_status); // ✅
+            if (latestBill.bill_date) setBillDate(latestBill.bill_date); // ✅
           }
         } catch (error) {
           console.error('Failed to fetch latest bill', error);
@@ -49,6 +52,32 @@ const HomeMemberPage = () => {
     };
     loadBill();
   }, [officerId]);
+
+  const getDueDateMessage = () => {
+    if (!billDate) return '';
+    const date = new Date(billDate);
+    const month = date.getMonth() + 2;
+    const thaiMonths = [
+      '', 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+      'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    ];
+    const displayMonth = thaiMonths[month > 12 ? 1 : month];
+    const year = date.getFullYear() + (month > 12 ? 1 : 0) + 543;
+
+    switch (paymentStatus) {
+      case 'Gray':
+      case 'Yellow':
+        return `โปรดชำระก่อนวันที่ 7 ${displayMonth} ${year}`;
+      case 'Orange':
+        return `โปรดชำระก่อนวันที่ 14 ${displayMonth} ${year}`;
+      case 'Red':
+        return 'โปรดชำระก่อนเจ้าหน้าที่ตัดท่อน้ำ';
+      case 'Green':
+        return 'ชำระเงินเสร็จสิ้น';
+      default:
+        return '';
+    }
+  };
 
   const goToUserProfile = () => {
     if (!numberId) {
@@ -77,20 +106,23 @@ const HomeMemberPage = () => {
       {/* Info Box */}
       <View style={styles.infoBoxContainer}>
         <View style={styles.infoBoxLeft}>
-          <Text style={styles.infoBoxTitle}>ยอดค่าใช้จ่ายน้ำป่า</Text>
+          <Text style={styles.infoBoxTitle}>ยอดค่าใช้จ่ายน้ำประปา</Text>
         </View>
         <View style={styles.infoBoxRight}>
           <Text style={styles.infoBoxAmount}>
-            {amountDue !== null ? `${amountDue} บาท` : '...'}
+            {paymentStatus === 'Green'
+              ? 'ชำระเงินเสร็จสิ้น'
+              : amountDue !== null
+                ? `${amountDue} บาท`
+                : '...'}
           </Text>
         </View>
       </View>
 
-      <Text style={styles.dueDateText}>โปรดชำระก่อนวันที่ {dueDate}</Text>
+      <Text style={styles.dueDateText}>{getDueDateMessage()}</Text>
 
       {/* Button Grid */}
       <View style={styles.buttonGrid}>
-        {/* 1. ชำระเงิน */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
@@ -98,6 +130,9 @@ const HomeMemberPage = () => {
               navigation.navigate('PaymentPage', {
                 officerId: collectionOfficerId,
                 fullName: `${firstName} ${lastName}`,
+                billDate,
+                paymentStatus,
+                amountDue,
               });
           }}
         >
@@ -105,7 +140,7 @@ const HomeMemberPage = () => {
           <Text style={styles.buttonText}>ชำระเงิน</Text>
         </TouchableOpacity>
 
-        {/* 2. ประวัติ */}
+
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
@@ -120,13 +155,11 @@ const HomeMemberPage = () => {
           <Text style={styles.buttonText}>ประวัติ</Text>
         </TouchableOpacity>
 
-        {/* 3. บัญชีผู้ใช้งาน */}
         <TouchableOpacity style={styles.button} onPress={goToUserProfile}>
           <Text style={styles.emoji}>👤</Text>
           <Text style={styles.buttonText}>บัญชีผู้ใช้งาน</Text>
         </TouchableOpacity>
 
-        {/* 4. ยืนยันชำระเงิน */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
@@ -143,7 +176,6 @@ const HomeMemberPage = () => {
           <Text style={styles.buttonText}>ยืนยันชำระเงิน</Text>
         </TouchableOpacity>
 
-        {/* 5. ติดต่อ */}
         <TouchableOpacity
           style={styles.button}
           onPress={() => {

@@ -6,13 +6,48 @@ import { updateBillStatus } from '../services/apiService';
 const CashPaymentPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { numberId, fullName } = route.params as {
+  const {
+    numberId,
+    fullName,
+    amountDue,
+    billDate,
+    paymentStatus,
+  } = route.params as {
     numberId: string;
     fullName: string;
+    amountDue: number;
+    billDate: string;
+    paymentStatus: string;
   };
 
   const now = new Date();
   const dateLabel = `6/${now.getMonth() + 1}/${now.getFullYear()}`;
+
+  const getDueDateMessage = () => {
+    if (!billDate) return '';
+    const date = new Date(billDate);
+    const month = date.getMonth() + 2;
+    const thaiMonths = [
+      '', 'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+      'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    ];
+    const displayMonth = thaiMonths[month > 12 ? 1 : month];
+    const year = date.getFullYear() + (month > 12 ? 1 : 0) + 543;
+
+    switch (paymentStatus) {
+      case 'Gray':
+      case 'Yellow':
+        return `โปรดชำระก่อนวันที่ 7 ${displayMonth} ${year}`;
+      case 'Orange':
+        return `โปรดชำระก่อนวันที่ 14 ${displayMonth} ${year}`;
+      case 'Red':
+        return 'โปรดชำระก่อนเจ้าหน้าที่ตัดท่อน้ำ';
+      case 'Green':
+        return 'ชำระเงินเสร็จสิ้น';
+      default:
+        return '';
+    }
+  };
 
   const handleConfirm = async (cashTime: number) => {
     try {
@@ -43,13 +78,18 @@ const CashPaymentPage = () => {
       {/* Info Box */}
       <View style={styles.infoBoxContainer}>
         <View style={styles.infoBoxLeft}>
-          <Text style={styles.infoBoxTitle}>ยอดค่าใช้จ่ายน้ำป่า</Text>
+          <Text style={styles.infoBoxTitle}>ยอดค่าใช้จ่ายน้ำประปา</Text>
         </View>
         <View style={styles.infoBoxRight}>
-          <Text style={styles.infoBoxAmount}>160 บาท</Text>
+          <Text style={styles.infoBoxAmount}>
+            {paymentStatus === 'Green'
+              ? 'ชำระเงินเสร็จสิ้น'
+              : `${amountDue} บาท`}
+          </Text>
         </View>
       </View>
-      <Text style={styles.dueDateText}>โปรดชำระก่อนวันที่ 7 พฤศจิกายน 2567</Text>
+
+      <Text style={styles.dueDateText}>{getDueDateMessage()}</Text>
 
       {/* ปุ่มนัดเวลา */}
       <Text style={styles.selectText}>กรุณาเลือกเวลานัดชำระเงินสด</Text>

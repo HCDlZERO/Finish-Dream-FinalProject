@@ -11,7 +11,7 @@ import { fetchOfficerData } from '../services/apiService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeOfficerPage = ({ navigation }: any) => {
-  const [officerData, setOfficerData] = useState<any>(null);
+  const [officerData, setOfficerData] = useState<any[]>([]);
   const [officerId, setOfficerId] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -34,7 +34,7 @@ const HomeOfficerPage = ({ navigation }: any) => {
     if (officerId) {
       try {
         const data = await fetchOfficerData(officerId);
-        setOfficerData(data);
+        setOfficerData(data || []);
       } catch (error) {
         console.error('Error fetching officer data:', error);
       } finally {
@@ -47,17 +47,11 @@ const HomeOfficerPage = ({ navigation }: any) => {
     fetchData();
   }, [officerId]);
 
-  const isLastTwoDaysOfMonth = () => {
-    const today = new Date();
-    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-    return today.getDate() >= lastDay - 1;
-  };
-
   const getButtonColor = (status: string) => {
     const colorMap: Record<string, string> = {
       Red: '#F44336',
       Orange: '#FF9800',
-      Yellow: '#FFEB3B', // นุ่มตากว่าเดิม
+      Yellow: '#FFEB3B',
       Green: '#4CAF50',
       Gray: '#9E9E9E',
     };
@@ -73,17 +67,11 @@ const HomeOfficerPage = ({ navigation }: any) => {
     });
   };
 
-  const handleCreateBillsButton = (officer: any) => {
-    if (isLastTwoDaysOfMonth()) {
-      navigation.navigate('CreateBills', {
-        officerId: officerId,
-        numberId: officer.numberId,
-        firstName: officer.firstName,
-        lastName: officer.lastName,
-      });
-    } else {
-      alert('สามารถสร้างบิลได้เฉพาะ 2 วันสุดท้ายของเดือนเท่านั้น');
-    }
+  const handleCreateBillsButton = () => {
+    navigation.navigate('CreateBills', {
+      officerId: officerId,
+      users: officerData, // ✅ ส่งรายชื่อลูกบ้านทั้งหมด
+    });
   };
 
   const handleOfficerSettingButton = () => {
@@ -110,7 +98,7 @@ const HomeOfficerPage = ({ navigation }: any) => {
     );
   }
 
-  if (!officerData) {
+  if (!officerData || officerData.length === 0) {
     return (
       <View style={styles.container}>
         <Text>ไม่พบข้อมูลลูกบ้าน</Text>
@@ -157,7 +145,6 @@ const HomeOfficerPage = ({ navigation }: any) => {
       <TouchableOpacity style={styles.settingButton} onPress={handleOfficerSettingButton}>
         <Text style={styles.settingText}>⚙️ ตั้งค่าเจ้าหน้าที่</Text>
       </TouchableOpacity>
-
     </ScrollView>
   );
 };

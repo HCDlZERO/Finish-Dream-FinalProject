@@ -88,7 +88,7 @@ public class UserMain006Repository {
     }
 
     public Map<String, String> getBankInfo(String officerId) {
-        String sql = "SELECT bank, bank_id FROM officer_info WHERE officer_id = ?";
+        String sql = "SELECT bank, bank_id, first_name, last_name FROM officer_info WHERE officer_id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -98,6 +98,8 @@ public class UserMain006Repository {
                     Map<String, String> info = new HashMap<>();
                     info.put("bank", rs.getString("bank"));
                     info.put("bank_id", rs.getString("bank_id"));
+                    info.put("first_name", rs.getString("first_name"));  // ✅ เพิ่ม
+                    info.put("last_name", rs.getString("last_name"));    // ✅ เพิ่ม
                     return info;
                 }
             }
@@ -106,6 +108,7 @@ public class UserMain006Repository {
         }
         return null;
     }
+
 
     public boolean updateLatestBill(String numberId, String paymentStatus, Integer cashTime) {
         String sql = """

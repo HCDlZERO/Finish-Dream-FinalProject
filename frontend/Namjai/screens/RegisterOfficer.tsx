@@ -15,13 +15,13 @@ import { registerUser } from '../services/apiService';
 
 const RegisterOfficer = ({ navigation }: any) => {
   const [formData, setFormData] = useState({
+    numberId: '',
     firstName: '',
     lastName: '',
     phoneNumber: '',
     email: '',
     password: '',
     confirmPassword: '',
-    numberId: '',
     role: 'Officer',
   });
 
@@ -55,6 +55,7 @@ const RegisterOfficer = ({ navigation }: any) => {
         <Text style={styles.subtext}>Already Registered? Log in here.</Text>
 
         {[
+          { key: 'numberId', label: 'ID CARD NUMBER' },
           { key: 'firstName', label: 'NAME' },
           { key: 'lastName', label: 'SURNAME' },
           { key: 'phoneNumber', label: 'NUMBER PHONE' },
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     flexGrow: 1,
     alignItems: 'center',
-    backgroundColor: '#2193b0', // พื้นหลังสีฟ้าเข้มแบบไล่เฉดเบา ๆ
+    backgroundColor: '#2193b0',
   },
   header: {
     fontSize: 28,

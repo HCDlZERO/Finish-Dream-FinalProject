@@ -14,13 +14,13 @@ import { registerUser } from '../services/apiService';
 
 const RegisterMember = ({ navigation }: any) => {
   const [formData, setFormData] = useState({
+    numberId: '',
     firstName: '',
     lastName: '',
     phoneNumber: '',
     email: '',
     password: '',
     confirmPassword: '',
-    numberId: '',
   });
 
   const handleChange = (name: string, value: string) => {
@@ -53,6 +53,7 @@ const RegisterMember = ({ navigation }: any) => {
         <Text style={styles.subtext}>Already Registered? Log in here.</Text>
 
         {[
+          { key: 'numberId', label: 'ID CARD NUMBER' },
           { key: 'firstName', label: 'NAME' },
           { key: 'lastName', label: 'SURNAME' },
           { key: 'phoneNumber', label: 'NUMBER PHONE' },
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     paddingTop: 60,
-    backgroundColor: '#42b8d3', // สามารถใช้ Gradient จริงในโปรเจกต์จริง
+    backgroundColor: '#42b8d3',
     flexGrow: 1,
   },
   header: {

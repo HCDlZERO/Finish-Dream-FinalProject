@@ -20,8 +20,7 @@ const UserProfilePage = () => {
   const loadUser = async () => {
     try {
       const result = await fetchUserDetail(numberId);
-      console.log('✅ ได้ข้อมูล:', result); // ✅ log ดูผล
-      setUserData(result); // ✅ แก้ตรงนี้ ไม่ต้อง .data แล้ว!!
+      setUserData(result);
     } catch (error) {
       console.error('Failed to load user data', error);
       Alert.alert('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลผู้ใช้ได้');
@@ -83,13 +82,11 @@ const UserProfilePage = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.logo}>NAM<Text style={styles.logoHighlight}>JAI</Text></Text>
         <Text style={styles.menuIcon}>☰</Text>
       </View>
 
-      {/* User Info */}
       <View style={styles.formContainer}>
         <InfoRow label="ชื่อจริง" value={userData.first_name} />
         <InfoRow label="นามสกุล" value={userData.last_name} />
@@ -101,13 +98,11 @@ const UserProfilePage = () => {
         <InfoRow label="อีเมล" value={userData.email} />
         <InfoRow label="เบอร์โทรศัพท์" value={userData.phone_number} />
 
-        {/* ปุ่มแก้ไข */}
         <TouchableOpacity style={styles.submitButton} onPress={handleOpenEdit}>
           <Text style={styles.submitText}>แก้ไขข้อมูล</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Modal สำหรับแก้ไข */}
       <Modal
         visible={editModalVisible}
         animationType="slide"
@@ -162,59 +157,75 @@ const styles = StyleSheet.create({
   logo: { fontSize: 24, fontWeight: 'bold', color: 'white' },
   logoHighlight: { color: '#FF4081' },
   menuIcon: { fontSize: 24, color: 'white' },
-  formContainer: { marginTop: 20, width: '85%' },
-  label: { marginTop: 10, color: '#0288D1', fontWeight: 'bold' },
+  formContainer: { marginTop: 20, width: '85%', alignSelf: 'center' },
+  label: { marginTop: 12, color: '#607D8B', fontWeight: 'bold', fontSize: 14 },
   readonlyField: {
-    backgroundColor: '#0288D1',
-    color: 'white',
-    padding: 10,
-    borderRadius: 10,
+    backgroundColor: '#ffffff',
+    color: '#333',
+    padding: 12,
+    borderRadius: 12,
     marginTop: 5,
     fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   input: {
-    backgroundColor: '#0288D1',
-    color: 'white',
-    padding: 10,
-    borderRadius: 10,
+    backgroundColor: '#fff',
+    color: '#000',
+    padding: 12,
+    borderRadius: 12,
     marginTop: 5,
     fontSize: 16,
+    borderWidth: 1.2,
+    borderColor: '#2196F3',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   submitButton: {
-    backgroundColor: '#0288D1',
-    marginTop: 20,
+    backgroundColor: '#2196F3',
+    marginTop: 25,
     padding: 15,
     borderRadius: 20,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   cancelButton: {
-    backgroundColor: '#999',
-    marginTop: 10,
+    backgroundColor: '#f44336',
+    marginTop: 15,
     padding: 15,
     borderRadius: 20,
     alignItems: 'center',
+    opacity: 0.95,
   },
   submitText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: 'bold',
   },
   cancelText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: 'bold',
   },
   modalContainer: {
     flexGrow: 1,
-    backgroundColor: '#E1F5FE',
+    backgroundColor: '#f2f9ff',
     padding: 20,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
   },
   modalTitle: {
     fontSize: 22,
     fontWeight: 'bold',
     color: '#0288D1',
-    marginBottom: 20,
+    marginBottom: 25,
     textAlign: 'center',
   },
 });
-

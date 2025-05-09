@@ -5,10 +5,13 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 const PaymentPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { officerId, fullName, numberId } = route.params as {
+  const { officerId, fullName, numberId, billDate, paymentStatus, amountDue } = route.params as {
     officerId: number;
     fullName: string;
     numberId: string;
+    billDate: string;
+    paymentStatus: string;
+    amountDue: number;
   };
 
   return (
@@ -29,7 +32,15 @@ const PaymentPage = () => {
       <View style={styles.optionGrid}>
         <TouchableOpacity
           style={styles.paymentButton}
-          onPress={() => navigation.navigate('QRCodePage', { officerId, fullName })}
+          onPress={() =>
+            navigation.navigate('QRCodePage', {
+              officerId,
+              fullName,
+              billDate,
+              paymentStatus,
+              amountDue, // ✅ เพิ่มตรงนี้
+            })
+          }
         >
           <Text style={styles.icon}>📷</Text>
           <Text style={styles.label}>QRCode</Text>
@@ -37,7 +48,15 @@ const PaymentPage = () => {
 
         <TouchableOpacity
           style={styles.paymentButton}
-          onPress={() => navigation.navigate('BankTransferPage', { officerId, fullName })}
+          onPress={() =>
+            navigation.navigate('BankTransferPage', {
+              officerId,
+              fullName,
+              billDate,
+              paymentStatus,
+              amountDue,
+            })
+          }
         >
           <Text style={styles.icon}>🏦</Text>
           <Text style={styles.label}>ธนาคาร</Text>
@@ -45,7 +64,15 @@ const PaymentPage = () => {
 
         <TouchableOpacity
           style={styles.paymentButton}
-          onPress={() => navigation.navigate('CashPaymentPage', { numberId, fullName })}
+          onPress={() =>
+            navigation.navigate('CashPaymentPage', {
+              numberId,
+              fullName,
+              billDate,
+              paymentStatus,
+              amountDue,
+            })
+          }
         >
           <Text style={styles.icon}>💵</Text>
           <Text style={styles.label}>เงินสด</Text>

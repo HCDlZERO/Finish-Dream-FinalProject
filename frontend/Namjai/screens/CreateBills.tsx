@@ -6,7 +6,7 @@ import {
 import { createBill } from '../services/apiService';
 
 const CreateBills = ({ route, navigation }: any) => {
-  const { officerId, users } = route.params;
+  const { officerId, users = [] } = route.params; // ✅ ป้องกัน undefined
 
   const [zone, setZone] = useState('');
   const [unitsMap, setUnitsMap] = useState<{ [numberId: string]: string }>({});
@@ -64,7 +64,7 @@ const CreateBills = ({ route, navigation }: any) => {
         placeholderTextColor="#aaa"
       />
 
-      {users.map((user: any) => (
+      {Array.isArray(users) && users.map((user: any) => (
         <View key={user.numberId} style={styles.userCard}>
           <Text style={styles.userName}>👤 {user.firstName} {user.lastName}</Text>
           <TextInput

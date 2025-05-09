@@ -1,0 +1,4 @@
+{
+  "buildCommand": "docker build -t namjai-backend ./backend",
+  "startCommand": "docker run -p 8080:8082 namjai-backend"
+}
