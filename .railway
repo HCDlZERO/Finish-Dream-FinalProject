@@ -1,4 +1,0 @@
-{
-  "buildCommand": "mvn -f backend/pom.xml clean package -DskipTests",
-  "startCommand": "java -jar backend/target/namjai-backend-1.0.0.jar"
-}
