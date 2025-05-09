@@ -1,0 +1,4 @@
+{
+  "buildCommand": "./mvnw package",
+  "startCommand": "java -jar backend/target/NamjaiBackend-0.0.1-SNAPSHOT.jar"
+}
