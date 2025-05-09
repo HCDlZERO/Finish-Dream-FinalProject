@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- Spring Boot Starter -->
+        <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -26,15 +26,11 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
             <version>3.0.0</version>
         </dependency>
-
-        <!-- ✅ Spring Boot Mail -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
             <version>3.0.0</version>
         </dependency>
-
-        <!-- ✅ Optional: BCrypt for password hashing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -95,7 +91,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- For supporting JavaMail (required by spring-context-support) -->
+        <!-- JavaMail support -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
@@ -105,14 +101,25 @@
 
     <build>
         <plugins>
+            <!-- ✅ Spring Boot plugin with repackage -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
+
+            <!-- Java compiler version -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
                 <configuration>
                     <source>15</source>
                     <target>15</target>
