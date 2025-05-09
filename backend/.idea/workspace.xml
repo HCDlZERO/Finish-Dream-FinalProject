@@ -5,27 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09c0ea19-4821-4d9e-903b-e2640edb9fc9" name="Changes" comment="Update Finsih UI and OTP">
-      <change afterPath="$PROJECT_DIR$/../.railway/project.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.railway" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.railway/project.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/repository/UserMain006Repository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/dreamfinalproject/repository/UserMain006Repository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/repository/UserMain006Repository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/dreamfinalproject/repository/UserMain006Repository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/namjai-backend-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/namjai-backend-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/BankTransferPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/BankTransferPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/CashPaymentPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/CashPaymentPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/CreateBills.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/CreateBills.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/HomeMemberPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/HomeMemberPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/HomeOfficerPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/HomeOfficerPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/PaymentPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/PaymentPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/QRCodePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/QRCodePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/RegisterMember.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/RegisterMember.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/RegisterOfficer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/RegisterOfficer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/ResetPasswordPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/ResetPasswordPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/Namjai/screens/UserProfilePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/Namjai/screens/UserProfilePage.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
