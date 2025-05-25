@@ -10,9 +10,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeHttpRequests(authz -> authz
-                        .anyRequest().permitAll()
+        http
+                .csrf(csrf -> csrf.disable()) // ✅ ปิด CSRF แบบใหม่
+                .authorizeHttpRequests(requests ->
+                        requests.anyRequest().permitAll() // ✅ ใช้ lambda style แทน method deprecated
                 );
         return http.build();
     }

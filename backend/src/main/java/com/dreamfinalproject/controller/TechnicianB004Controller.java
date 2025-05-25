@@ -21,7 +21,8 @@ public class TechnicianB004Controller {
     }
 
     @PostMapping("/member-info")
-    public ResponseEntity<TechnicianB004ResponseDTO> getMemberInfo(@RequestParam String numberId) {
+    public ResponseEntity<TechnicianB004ResponseDTO> getMemberInfo(
+            @RequestParam(name = "numberId") String numberId) {
         return ResponseEntity.ok(technicianService.getMemberInfoByNumberId(numberId));
     }
 }

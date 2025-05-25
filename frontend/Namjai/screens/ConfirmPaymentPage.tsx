@@ -10,6 +10,7 @@ import {
   Alert,
   PermissionsAndroid,
   Platform,
+  SafeAreaView,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -37,7 +38,7 @@ const ConfirmPaymentPage = () => {
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
 
-    setConfirmDate(`${year}-${month}-${day}`);  // ✅ เปลี่ยนตรงนี้เลยตอนตั้งต้น
+    setConfirmDate(`${year}-${month}-${day}`);
     setConfirmTime(`${hours}:${minutes}`);
   }, []);
 
@@ -85,7 +86,7 @@ const ConfirmPaymentPage = () => {
         } else if (response.assets && response.assets.length > 0) {
           const asset = response.assets[0];
           if (asset.base64) {
-            setImageBase64Raw(asset.base64); // ❗ เก็บ base64 แบบดิบ ไม่ใส่ prefix
+            setImageBase64Raw(asset.base64);
           }
         }
       },
@@ -102,13 +103,13 @@ const ConfirmPaymentPage = () => {
       firstName,
       lastName,
       amountDue,
-      confirmDate, // format เป็น YYYY-MM-DD แล้ว
-      confirmTime, // HH:mm
+      confirmDate,
+      confirmTime,
       officerName: String(officerId),
-      confirmImage: `data:image/jpeg;base64,${imageBase64Raw}`, // ✅ ใส่ prefix ตอนส่ง
+      confirmImage: `data:image/jpeg;base64,${imageBase64Raw}`,
     };
 
-    console.log('🚀 payload:', JSON.stringify(payload, null, 2)); // ✅ Debug ดูตรงนี้
+    console.log('🚀 payload:', JSON.stringify(payload, null, 2));
     try {
       await submitConfirmPayment(payload);
       Alert.alert('ยืนยันสำเร็จ', 'ส่งข้อมูลเรียบร้อยแล้ว');
@@ -122,10 +123,12 @@ const ConfirmPaymentPage = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.logo}>NAM<Text style={styles.logoHighlight}>JAI</Text></Text>
+      <SafeAreaView style={styles.header}>
+        <Text style={styles.logo}>
+          NAM<Text style={styles.logoHighlight}>JAI</Text>
+        </Text>
         <Text style={styles.menuIcon}>☰</Text>
-      </View>
+      </SafeAreaView>
 
       {/* Image Picker */}
       <TouchableOpacity style={styles.imageBox} onPress={handlePickImage}>
@@ -133,6 +136,7 @@ const ConfirmPaymentPage = () => {
           <Image
             source={{ uri: `data:image/jpeg;base64,${imageBase64Raw}` }}
             style={styles.image}
+            resizeMode="contain"
           />
         ) : (
           <Text style={styles.imageText}>เพิ่มไฟล์</Text>
@@ -160,19 +164,33 @@ const ConfirmPaymentPage = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1, backgroundColor: '#E1F5FE', padding: 20 },
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#E1F5FE',
+    padding: 20,
+  },
   header: {
     backgroundColor: '#0288D1',
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  logo: { fontSize: 24, fontWeight: 'bold', color: 'white' },
-  logoHighlight: { color: '#FF4081' },
-  menuIcon: { fontSize: 24, color: 'white' },
+  logo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  logoHighlight: {
+    color: '#FF4081',
+  },
+  menuIcon: {
+    fontSize: 24,
+    color: 'white',
+  },
   imageBox: {
-    height: 180,
+    height: 250,
     borderWidth: 2,
     borderColor: '#0288D1',
     borderRadius: 10,
@@ -181,9 +199,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  imageText: { color: '#0288D1', fontSize: 18 },
-  image: { width: '100%', height: '100%', borderRadius: 8 },
-  label: { marginTop: 15, color: '#0288D1', fontWeight: 'bold' },
+  imageText: {
+    color: '#0288D1',
+    fontSize: 18,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+  },
+  label: {
+    marginTop: 15,
+    color: '#0288D1',
+    fontWeight: 'bold',
+  },
   input: {
     backgroundColor: '#0288D1',
     color: 'white',

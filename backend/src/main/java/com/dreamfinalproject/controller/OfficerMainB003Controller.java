@@ -38,10 +38,9 @@ public class OfficerMainB003Controller {
         }
     }
 
-
-    // ดึงข้อมูลบิลค่าน้ำ โดยใช้ numberId เป็น Query Parameter
+    // ✅ แก้ตรงนี้ เพิ่ม name ชัดเจน
     @GetMapping("/Usersbills")
-    public ResponseEntity<List<OfficerMainB003ResponseDTO>> getBillsByNumberId(@RequestParam String numberId) {
+    public ResponseEntity<List<OfficerMainB003ResponseDTO>> getBillsByNumberId(@RequestParam(name = "numberId") String numberId) {
         return ResponseEntity.ok(service.getBillsByNumberId(numberId));
     }
 
@@ -73,6 +72,7 @@ public class OfficerMainB003Controller {
         service.deleteUser(requestDTO);
         return ResponseEntity.ok("User deleted (recorded) successfully.");
     }
+
     @PostMapping("/updateOfficerInfo")
     public ResponseEntity<String> updateOfficerInfo(@RequestBody OfficerMainB003RequestDTO requestDTO) {
         try {
@@ -87,9 +87,4 @@ public class OfficerMainB003Controller {
                     .body("Error updating officer info: " + e.getMessage());
         }
     }
-
-
-
-
-
 }

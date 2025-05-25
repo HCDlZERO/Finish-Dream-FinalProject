@@ -24,7 +24,7 @@ public class HeadMainB005Controller {
 
     // เส้นที่ 2: POST ลบ Officer โดยใช้ Number_id ผ่าน Params
     @PostMapping("/deleteOfficer")
-    public ResponseEntity<String> deleteOfficer(@RequestParam String numberId) {
+    public ResponseEntity<String> deleteOfficer(@RequestParam(name = "numberId") String numberId) {
         service.deleteOfficerByNumberId(numberId);
         return ResponseEntity.ok("Officer deleted successfully.");
     }
@@ -42,8 +42,8 @@ public class HeadMainB005Controller {
     // เส้นที่ 4: อนุมัติ/ปฏิเสธ request_members
     @PostMapping("/approveRequest")
     public ResponseEntity<String> approveRequest(
-            @RequestParam String numberId,
-            @RequestParam String tag) {
+            @RequestParam(name = "numberId") String numberId,
+            @RequestParam(name = "tag") String tag) {
         service.handleRequestApproval(numberId, tag);
         return ResponseEntity.ok("Request processed successfully.");
     }
@@ -51,15 +51,15 @@ public class HeadMainB005Controller {
     // เส้นที่ 5: ลบ delete_members (และ Members ถ้า Yes)
     @PostMapping("/processDelete")
     public ResponseEntity<String> processDelete(
-            @RequestParam String numberId,
-            @RequestParam String tag) {
+            @RequestParam(name = "numberId") String numberId,
+            @RequestParam(name = "tag") String tag) {
         service.handleDeleteProcess(numberId, tag);
         return ResponseEntity.ok("Delete processed successfully.");
     }
+
     @GetMapping("/pendingUsers")
     public ResponseEntity<List<HeadMainB005ResponseDTO>> getPendingUsers() {
         List<HeadMainB005ResponseDTO> result = service.getPendingUsers();
         return ResponseEntity.ok(result);
     }
-
 }

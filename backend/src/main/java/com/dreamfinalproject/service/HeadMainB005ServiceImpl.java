@@ -13,7 +13,7 @@ import java.util.List;
 public class HeadMainB005ServiceImpl implements HeadMainB005Service {
 
     @Autowired
-    private HeadMainB005Repository repository;
+    public HeadMainB005Repository repository;
 
     @Override
     public List<HeadMainB005ResponseDTO> getAllOfficers() {

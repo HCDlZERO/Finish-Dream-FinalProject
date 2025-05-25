@@ -34,7 +34,7 @@ const RegisterOfficer = ({ navigation }: any) => {
       const response = await registerUser(formData);
       if (response.message === 'ลงทะเบียนสำเร็จ') {
         Alert.alert('สำเร็จ', response.message, [
-          { text: 'OK', onPress: () => navigation.navigate('Login') },
+          { text: 'OK', onPress: () => navigation.navigate('LoginScreen') },
         ]);
       } else {
         Alert.alert('Error', response.message || 'เกิดข้อผิดพลาด');
@@ -63,14 +63,16 @@ const RegisterOfficer = ({ navigation }: any) => {
           { key: 'password', label: 'PASSWORD' },
           { key: 'confirmPassword', label: 'CONFIRM PASSWORD' },
         ].map(({ key, label }) => (
-          <TextInput
-            key={key}
-            placeholder={label}
-            placeholderTextColor="#ffffff"
-            style={styles.input}
-            secureTextEntry={key.includes('password')}
-            onChangeText={(value) => handleChange(key, value)}
-          />
+          <View key={key} style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>{label}</Text>
+            <TextInput
+              placeholder={label}
+              placeholderTextColor="#ffffff"
+              style={styles.input}
+              secureTextEntry={key.toLowerCase().includes('password')}
+              onChangeText={(value) => handleChange(key, value)}
+            />
+          </View>
         ))}
 
         <Text style={styles.label}>ROLE</Text>
@@ -116,6 +118,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 30,
   },
+  inputGroup: {
+    width: '100%',
+    marginBottom: 12,
+  },
+  inputLabel: {
+    fontSize: 14,
+    color: '#ffffff',
+    marginBottom: 6,
+    marginLeft: 10,
+  },
   input: {
     width: '100%',
     backgroundColor: '#b3e5fc',
@@ -124,7 +136,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     fontSize: 16,
     color: '#000',
-    marginBottom: 12,
   },
   label: {
     fontSize: 12,

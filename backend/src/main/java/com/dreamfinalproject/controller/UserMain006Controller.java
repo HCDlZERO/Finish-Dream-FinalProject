@@ -17,21 +17,22 @@ public class UserMain006Controller {
 
     // 🔹 API 1: ดึงบิลล่าสุดโดย numberId
     @PostMapping(value = "/getLatestBill", produces = "application/json")
-    public ResponseEntity<UserMain006ResponseDTO> getLatestBill(@RequestParam Integer id) { // ✅ ใช้ Integer
+    public ResponseEntity<UserMain006ResponseDTO> getLatestBill(@RequestParam("id") Integer id) {
         UserMain006ResponseDTO response = service.getLatestBill(id);
         return ResponseEntity.ok(response);
     }
 
+
     // 🔹 API 2: ดึง QR Code จาก officerId
     @PostMapping(value = "/getQrCode", produces = "application/json")
-    public ResponseEntity<UserMain006ResponseDTO> getQrCode(@RequestParam String officerId) {
+    public ResponseEntity<UserMain006ResponseDTO> getQrCode(@RequestParam("officerId") String officerId) {
         UserMain006ResponseDTO response = service.getQrCode(officerId);
         return ResponseEntity.ok(response);
     }
 
     // 🔹 API 3: ดึงข้อมูล Bank จาก officerId
     @PostMapping(value = "/getBankInfo", produces = "application/json")
-    public ResponseEntity<UserMain006ResponseDTO> getBankInfo(@RequestParam String officerId) {
+    public ResponseEntity<UserMain006ResponseDTO> getBankInfo(@RequestParam("officerId") String officerId) {
         UserMain006ResponseDTO response = service.getBankInfo(officerId);
         return ResponseEntity.ok(response);
     }
@@ -44,17 +45,17 @@ public class UserMain006Controller {
     }
 
     @PostMapping(value = "/getBillHistory", produces = "application/json")
-    public ResponseEntity<UserMain006ResponseDTO> getBillHistory(@RequestParam String numberId) {
+    public ResponseEntity<UserMain006ResponseDTO> getBillHistory(@RequestParam("numberId") String numberId) {
         return ResponseEntity.ok(service.getBillHistory(numberId));
     }
 
     @PostMapping(value = "/getBillDetail", produces = "application/json")
-    public ResponseEntity<UserMain006ResponseDTO> getBillDetail(@RequestParam String billId) {
+    public ResponseEntity<UserMain006ResponseDTO> getBillDetail(@RequestParam("billId") String billId) {
         return ResponseEntity.ok(service.getBillDetail(billId));
     }
 
     @PostMapping(value = "/getUserDetail", produces = "application/json")
-    public ResponseEntity<UserMain006ResponseDTO> getUserDetail(@RequestParam String numberId) {
+    public ResponseEntity<UserMain006ResponseDTO> getUserDetail(@RequestParam("numberId") String numberId) {
         return ResponseEntity.ok(service.getUserDetail(numberId));
     }
 

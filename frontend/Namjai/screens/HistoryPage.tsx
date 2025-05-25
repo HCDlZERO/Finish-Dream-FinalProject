@@ -52,7 +52,7 @@ const HistoryPage = () => {
       const result = await fetchBillDetail(billId);
       if (result) {
         console.log('✅ [HistoryPage] Bill detail fetched:', result);
-        setBillDetail(result); // ✅ ไม่ต้อง .data แล้ว
+        setBillDetail(result);
         setModalVisible(true);
       }
     } catch (error) {
@@ -64,6 +64,23 @@ const HistoryPage = () => {
   const formatDate = (dateStr: string) => {
     const [year, month, day] = dateStr.split('-');
     return `${parseInt(day)}/${parseInt(month)}/${parseInt(year) + 543}`;
+  };
+
+  const mapPaymentStatus = (status: string) => {
+    switch (status) {
+      case 'Gray':
+        return 'ยังไม่ได้ชำระเงิน';
+      case 'Green':
+        return 'ชำระเงินเสร็จสิ้น';
+      case 'Yellow':
+        return 'ชำระด้วยเงินสด';
+      case 'Orange':
+        return 'ค้างชำระเงิน';
+      case 'Red':
+        return 'เกินเวลาชำระเงิน';
+      default:
+        return 'ไม่ทราบสถานะ';
+    }
   };
 
   return (
@@ -80,7 +97,7 @@ const HistoryPage = () => {
         <Text style={styles.userInfoText}>ลูกบ้าน</Text>
       </View>
 
-      {/* Loading */}
+      {/* Loading or Bill List */}
       {loading ? (
         <ActivityIndicator size="large" color="#0288D1" style={{ marginTop: 50 }} />
       ) : billList.length > 0 ? (
@@ -114,7 +131,7 @@ const HistoryPage = () => {
                 <Text>วันที่: {formatDate(billDetail.bill_date)}</Text>
                 <Text>ค่าน้ำที่ใช้: {billDetail.units_used} หน่วย</Text>
                 <Text>ยอดเงิน: {billDetail.amount_due} บาท</Text>
-                <Text>สถานะการชำระเงิน: {billDetail.payment_status}</Text>
+                <Text>สถานะการชำระเงิน: {mapPaymentStatus(billDetail.payment_status)}</Text>
                 {billDetail.cash_time && (
                   <Text>เวลารับเงินสด: {billDetail.cash_time === '1' ? '11:00 น.' : '17:00 น.'}</Text>
                 )}

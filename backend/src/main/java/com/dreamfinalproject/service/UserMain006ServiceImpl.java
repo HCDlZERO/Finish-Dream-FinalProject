@@ -13,7 +13,7 @@ import java.util.Map;
 public class UserMain006ServiceImpl implements UserMain006Service {
 
     @Autowired
-    private UserMain006Repository repository;
+    public UserMain006Repository repository;
 
     @Override
     public UserMain006ResponseDTO getLatestBill(Integer id) {

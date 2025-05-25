@@ -6,11 +6,12 @@ import { fetchQrCodeByOfficerId } from '../services/apiService';
 const QRCodePage = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { officerId, fullName, billDate, paymentStatus } = route.params as {
+  const { officerId, fullName, billDate, paymentStatus, amountDue } = route.params as {
     officerId: number;
     fullName: string;
     billDate: string;
     paymentStatus: string;
+    amountDue: number; // ✅ เพิ่ม amountDue
   };
 
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
@@ -75,15 +76,15 @@ const QRCodePage = () => {
 
       {/* Info Box */}
       <View style={styles.infoBoxContainer}>
-        <View style={styles.infoBoxLeft}>
-          <Text style={styles.infoBoxTitle}>ยอดค่าใช้จ่ายน้ำประปา</Text>
-        </View>
-        <View style={styles.infoBoxRight}>
-          <Text style={styles.infoBoxAmount}>
-            {paymentStatus === 'Green' ? 'ชำระเงินเสร็จสิ้น' : '160 บาท'}
-          </Text>
-        </View>
-      </View>
+              <View style={styles.infoBoxLeft}>
+                <Text style={styles.infoBoxTitle}>ยอดค่าใช้จ่ายน้ำประปา</Text>
+              </View>
+              <View style={styles.infoBoxRight}>
+                <Text style={styles.infoBoxAmount}>
+                  {paymentStatus === 'Green' ? 'ชำระเงินเสร็จสิ้น' : `${amountDue} บาท`}
+                </Text>
+              </View>
+            </View>
 
       <Text style={styles.dueDateText}>{getDueDateMessage()}</Text>
 

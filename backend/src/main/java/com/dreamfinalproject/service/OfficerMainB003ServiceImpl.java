@@ -17,7 +17,7 @@ import java.time.ZoneId;
 public class OfficerMainB003ServiceImpl implements OfficerMainB003Service {
 
     @Autowired
-    private OfficerMainB003Repository repository;
+    public OfficerMainB003Repository repository;
 
     @Override
     public List<OfficerMainB003ResponseDTO> getUsersByOfficerId(String officerId) {

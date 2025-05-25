@@ -11,7 +11,7 @@ import java.util.List;
 public class TechnicianB004ServiceImpl implements TechnicianB004Service {
 
     @Autowired
-    private TechnicianB004Repository repository;
+    public TechnicianB004Repository repository;
 
     @Override
     public List<TechnicianB004ResponseDTO> getRedAndCancelledBills() {

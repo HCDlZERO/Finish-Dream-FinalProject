@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class Blogin002ServiceImpl implements Blogin002Service {
 
-    @Autowired
-    private Blogin002Repository blogin002Repository;
+    public final Blogin002Repository blogin002Repository;
+    public final TokenService tokenService;
 
     @Autowired
-    private TokenService tokenService;
+    public Blogin002ServiceImpl(Blogin002Repository blogin002Repository, TokenService tokenService) {
+        this.blogin002Repository = blogin002Repository;
+        this.tokenService = tokenService;
+    }
 
     @Override
     public Blogin002ResponseDTO login(Blogin002RequestDTO loginRequest) {
@@ -36,7 +39,6 @@ public class Blogin002ServiceImpl implements Blogin002Service {
             );
         }
 
-
         if (userRoleAndId != null) {
             if ("Member".equals(userRoleAndId[0])) {
                 return loginMember(loginRequest, userRoleAndId);
@@ -47,7 +49,6 @@ public class Blogin002ServiceImpl implements Blogin002Service {
             }
         }
 
-        // หากไม่พบข้อมูล
         throw new RuntimeException("Invalid username, password, or role.");
     }
 
