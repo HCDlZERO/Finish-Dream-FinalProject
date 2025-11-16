@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.dreamfinalproject.headMainB005.HeadMainB005ControllerTest
--------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.518 s -- in com.dreamfinalproject.headMainB005.HeadMainB005ControllerTest
