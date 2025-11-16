@@ -1,238 +1,302 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-  Image,
-  Alert,
-  PermissionsAndroid,
-  Platform,
-  SafeAreaView,
+  View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity,
+  ActivityIndicator, Image, PermissionsAndroid, Platform, SafeAreaView
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { submitConfirmPayment } from '../services/apiService';
+import ErrorPopup from '../services/ErrorPopup';
 
 const ConfirmPaymentPage = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const route = useRoute();
   const { officerId, firstName, lastName, amountDue } = route.params as {
-    officerId: number;
-    firstName: string;
-    lastName: string;
-    amountDue: number;
+    officerId: number; firstName: string; lastName: string; amountDue: number;
   };
 
   const [confirmDate, setConfirmDate] = useState('');
   const [confirmTime, setConfirmTime] = useState('');
   const [imageBase64Raw, setImageBase64Raw] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState<{ visible: boolean; message?: string }>({ visible: false });
 
   useEffect(() => {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-
-    setConfirmDate(`${year}-${month}-${day}`);
-    setConfirmTime(`${hours}:${minutes}`);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    setConfirmDate(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`);
+    setConfirmTime(`${pad(now.getHours())}:${pad(now.getMinutes())}`);
   }, []);
 
   const requestStoragePermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const permission = Platform.Version >= 33
-          ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
-          : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE;
-        const granted = await PermissionsAndroid.request(permission, {
-          title: 'Permission Request',
-          message: 'แอปนี้ต้องการเข้าถึงคลังรูปภาพของคุณ',
-          buttonNeutral: 'Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        });
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err) {
-        console.warn(err);
-        return false;
-      }
+    if (Platform.OS !== 'android') return true;
+    try {
+      const perm = Platform.Version >= 33
+        ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
+        : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE;
+      const granted = await PermissionsAndroid.request(perm, {
+        title: 'Permission Request',
+        message: 'แอปนี้ต้องการเข้าถึงคลังรูปภาพของคุณ',
+        buttonNeutral: 'Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      });
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (e: any) {
+      setPopup({ visible: true, message: e?.message?.toString?.() || 'ไม่สามารถขอสิทธิ์เข้าถึงรูปภาพได้' });
+      return false;
     }
-    return true;
   };
 
-  const handlePickImage = async () => {
-    const hasPermission = await requestStoragePermission();
-    if (!hasPermission) {
-      Alert.alert('ต้องอนุญาตเข้าถึงรูปภาพ');
-      return;
+  const pickImage = useCallback(async () => {
+    if (!(await requestStoragePermission())) {
+      return setPopup({ visible: true, message: 'กรุณาอนุญาตการเข้าถึงรูปภาพเพื่ออัปโหลดหลักฐาน' });
     }
+    launchImageLibrary({ mediaType: 'photo', includeBase64: true, quality: 0.75 }, (res: any) => {
+      if (res?.errorMessage) return setPopup({ visible: true, message: `เลือกรูปไม่ได้: ${res.errorMessage}` });
+      const b64 = res?.assets?.[0]?.base64;
+      if (!b64) return;
+      setImageBase64Raw(b64);
+    });
+  }, []);
 
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        includeBase64: true,
-        quality: 0.7,
-      },
-      (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.errorMessage) {
-          console.error('ImagePicker Error: ', response.errorMessage);
-          Alert.alert('เกิดข้อผิดพลาด', response.errorMessage);
-        } else if (response.assets && response.assets.length > 0) {
-          const asset = response.assets[0];
-          if (asset.base64) {
-            setImageBase64Raw(asset.base64);
-          }
-        }
-      },
-    );
+  const validate = () => {
+    if (!imageBase64Raw) return 'กรุณาอัปโหลดรูปภาพยืนยันการชำระเงิน';
+    if (!confirmDate || !confirmTime) return 'ข้อมูลวันที่/เวลาไม่ครบ';
+    if (!firstName?.trim() || !lastName?.trim()) return 'ข้อมูลชื่อผู้ชำระไม่ครบ';
+    if (amountDue == null) return 'จำนวนเงินไม่ถูกต้อง';
+    return '';
   };
 
   const handleSubmit = async () => {
-    if (!imageBase64Raw) {
-      Alert.alert('กรุณาอัปโหลดรูปภาพยืนยันการชำระเงิน');
-      return;
-    }
-
+    const msg = validate(); if (msg) return setPopup({ visible: true, message: msg });
     const payload = {
-      firstName,
-      lastName,
-      amountDue,
-      confirmDate,
-      confirmTime,
+      firstName, lastName, amountDue,
+      confirmDate, confirmTime,
       officerName: String(officerId),
       confirmImage: `data:image/jpeg;base64,${imageBase64Raw}`,
     };
-
-    console.log('🚀 payload:', JSON.stringify(payload, null, 2));
     try {
+      setLoading(true);
       await submitConfirmPayment(payload);
-      Alert.alert('ยืนยันสำเร็จ', 'ส่งข้อมูลเรียบร้อยแล้ว');
+      setPopup({ visible: true, message: 'บันทึกการยืนยันการชำระเงินเรียบร้อยแล้ว' });
       navigation.goBack();
-    } catch (error) {
-      console.error('Error submitting payment confirmation:', error);
-      Alert.alert('เกิดข้อผิดพลาด', 'ไม่สามารถส่งข้อมูลได้');
+    } catch (e: any) {
+      setPopup({ visible: true, message: e?.message?.toString?.() || 'ไม่สามารถส่งข้อมูลได้ โปรดลองใหม่' });
+    } finally {
+      setLoading(false);
     }
   };
 
+  const dateDisplay = confirmDate ? confirmDate.split('-').reverse().join('/') : '-';
+  const timeDisplay = confirmTime ? `${confirmTime} น.` : '-';
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       {/* Header */}
-      <SafeAreaView style={styles.header}>
-        <Text style={styles.logo}>
-          NAM<Text style={styles.logoHighlight}>JAI</Text>
-        </Text>
-        <Text style={styles.menuIcon}>☰</Text>
+      <SafeAreaView style={styles.headerRow}>
+        <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.85} style={styles.backChip}>
+          <Text style={styles.backText}>กลับ</Text>
+        </TouchableOpacity>
+        <Text style={styles.brand}>Nam<Text style={styles.brandAccent}>Jai</Text></Text>
+        <TouchableOpacity onPress={pickImage} activeOpacity={0.85} style={styles.uploadChip}>
+          <Text style={styles.uploadText}>เลือกรูป</Text>
+        </TouchableOpacity>
       </SafeAreaView>
 
-      {/* Image Picker */}
-      <TouchableOpacity style={styles.imageBox} onPress={handlePickImage}>
-        {imageBase64Raw ? (
-          <Image
-            source={{ uri: `data:image/jpeg;base64,${imageBase64Raw}` }}
-            style={styles.image}
-            resizeMode="contain"
-          />
-        ) : (
-          <Text style={styles.imageText}>เพิ่มไฟล์</Text>
-        )}
-      </TouchableOpacity>
+      {/* Title + meta */}
+      <View style={styles.titleWrap}>
+        <Text style={styles.title}>ยืนยันการชำระเงิน</Text>
+        <View style={styles.metaRow}>
+          <View style={styles.metaChip}>
+            <Text style={styles.metaKey}>เจ้าหน้าที่</Text>
+            <Text style={styles.metaValue}>{officerId}</Text>
+          </View>
+          <View style={[styles.amountChip]}>
+            <Text style={styles.amountText}>{amountDue?.toLocaleString?.() ?? amountDue} บาท</Text>
+          </View>
+        </View>
+      </View>
 
-      {/* Form */}
-      <Text style={styles.label}>NAME</Text>
-      <TextInput style={styles.input} value={`${firstName} ${lastName}`} editable={false} />
+      {/* Upload Card */}
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>หลักฐานการโอน</Text>
+        <TouchableOpacity style={styles.imageBox} onPress={pickImage} disabled={loading} activeOpacity={0.9}>
+          {imageBase64Raw ? (
+            <>
+              <Image source={{ uri: `data:image/jpeg;base64,${imageBase64Raw}` }} style={styles.image} resizeMode="contain" />
+              <View style={styles.imageOverlay}>
+                <Text style={styles.overlayText}>เปลี่ยนรูป</Text>
+              </View>
+            </>
+          ) : (
+            <View style={styles.placeholderWrap}>
+              <Text style={styles.placeholderIcon}>🧾</Text>
+              <Text style={styles.placeholderText}>แตะเพื่ออัปโหลดสลิป</Text>
+              <Text style={styles.placeholderHint}>รองรับ JPG/PNG • แนะนำให้เห็นวัน‑เวลา/ยอดชัดเจน</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
 
-      <Text style={styles.label}>DATE</Text>
-      <TextInput style={styles.input} value={confirmDate.split('-').reverse().join('/')} editable={false} />
+      {/* Details Card */}
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>รายละเอียดการชำระ</Text>
 
-      <Text style={styles.label}>TIME</Text>
-      <TextInput style={styles.input} value={`${confirmTime} น.`} editable={false} />
+        <View style={styles.row}>
+          <Text style={styles.rowLabel}>ชื่อผู้ชำระ</Text>
+          <Text style={styles.rowValue}>{firstName} {lastName}</Text>
+        </View>
 
-      <Text style={styles.label}>AMOUNT OF MONEY</Text>
-      <TextInput style={styles.input} value={`${amountDue} บาท`} editable={false} />
+        <View style={styles.row}>
+          <Text style={styles.rowLabel}>วันที่</Text>
+          <Text style={styles.rowValue}>{dateDisplay}</Text>
+        </View>
 
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitText}>ยืนยัน</Text>
-      </TouchableOpacity>
+        <View style={styles.row}>
+          <Text style={styles.rowLabel}>เวลา</Text>
+          <Text style={styles.rowValue}>{timeDisplay}</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Text style={styles.rowLabel}>ยอดเงิน</Text>
+          <Text style={styles.rowValue}>{amountDue?.toLocaleString?.() ?? amountDue} บาท</Text>
+        </View>
+      </View>
+
+      {/* Actions */}
+      <View style={styles.actionsRow}>
+        <TouchableOpacity
+          style={[styles.primaryBtn, loading && { opacity: .6 }]}
+          onPress={handleSubmit}
+          disabled={loading}
+          activeOpacity={0.9}
+        >
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryText}>ยืนยัน</Text>}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.secondaryBtn}
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.9}
+          disabled={loading}
+        >
+          <Text style={styles.secondaryText}>ยกเลิก</Text>
+        </TouchableOpacity>
+      </View>
+
+      <ErrorPopup
+        visible={popup.visible}
+        message={popup.message}
+        onClose={() => setPopup({ visible: false, message: '' })}
+        title="แจ้งเตือน"
+      />
     </ScrollView>
   );
 };
 
+export default ConfirmPaymentPage;
+
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#E1F5FE',
-    padding: 20,
+    backgroundColor: '#E9F4FF',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
   },
-  header: {
-    backgroundColor: '#0288D1',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+
+  // Header
+  headerRow: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 8,
   },
-  logo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+  brand: { fontSize: 28, fontWeight: '900', letterSpacing: 1, color: '#0D2A4A' },
+  brandAccent: { color: '#FF4081' },
+  backChip: {
+    backgroundColor: '#E1EEF7', paddingVertical: 8, paddingHorizontal: 14,
+    borderRadius: 999, minWidth: 64, alignItems: 'center'
   },
-  logoHighlight: {
-    color: '#FF4081',
-  },
-  menuIcon: {
-    fontSize: 24,
-    color: 'white',
-  },
-  imageBox: {
-    height: 250,
-    borderWidth: 2,
-    borderColor: '#0288D1',
-    borderRadius: 10,
-    marginTop: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-  imageText: {
-    color: '#0288D1',
-    fontSize: 18,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 8,
-  },
-  label: {
-    marginTop: 15,
-    color: '#0288D1',
-    fontWeight: 'bold',
-  },
-  input: {
+  backText: { color: '#0D2A4A', fontWeight: '700' },
+  uploadChip: {
     backgroundColor: '#0288D1',
-    color: 'white',
-    padding: 12,
-    borderRadius: 10,
-    fontSize: 16,
-    marginTop: 5,
+    paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999,
+    shadowColor: '#0288D1', shadowOpacity: 0.25, shadowOffset: { width: 0, height: 6 }, shadowRadius: 10, elevation: 4
   },
-  submitButton: {
-    backgroundColor: '#0288D1',
-    marginTop: 30,
-    padding: 15,
-    borderRadius: 20,
-    alignItems: 'center',
-  },
-  submitText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
+  uploadText: { color: '#fff', fontWeight: '700' },
 
-export default ConfirmPaymentPage;
+  // Title & Meta
+  titleWrap: { width: '100%', marginTop: 6, marginBottom: 12 },
+  title: { fontSize: 18, fontWeight: '800', color: '#0D2A4A' },
+  metaRow: { flexDirection: 'row', gap: 10, marginTop: 8, alignItems: 'center' },
+  metaChip: {
+    backgroundColor: '#F4FAFF', borderWidth: 1, borderColor: '#C7DFEF',
+    paddingVertical: 8, paddingHorizontal: 12, borderRadius: 12, flexDirection: 'row', gap: 8, alignItems: 'baseline'
+  },
+  metaKey: { color: '#4E6E90', fontWeight: '700', fontSize: 12 },
+  metaValue: { color: '#0D2A4A', fontWeight: '900', fontSize: 14 },
+  amountChip: {
+    backgroundColor: '#0D2A4A',
+    paddingVertical: 8, paddingHorizontal: 12, borderRadius: 12,
+  },
+  amountText: { color: '#fff', fontWeight: '900', fontSize: 14 },
+
+  // Card
+  card: {
+    width: '100%',
+    backgroundColor: '#ffffff',
+    borderRadius: 18,
+    padding: 16,
+    shadowColor: '#0D2A4A',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 10 },
+    shadowRadius: 14,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#E1EEF7',
+    marginBottom: 12,
+  },
+
+  // Upload
+  imageBox: {
+    width: '100%',
+    height: 240,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#C7DFEF',
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+    justifyContent: 'center', alignItems: 'center',
+  },
+  placeholderWrap: { alignItems: 'center', gap: 6 },
+  placeholderIcon: { fontSize: 28 },
+  placeholderText: { fontWeight: '900', color: '#0D2A4A' },
+  placeholderHint: { fontSize: 12, color: '#4E6E90' },
+  image: { width: '100%', height: '100%' },
+  imageOverlay: {
+    position: 'absolute', right: 10, bottom: 10,
+    backgroundColor: '#0288D1', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 999,
+    shadowColor: '#0288D1', shadowOpacity: 0.25, shadowOffset: { width: 0, height: 6 }, shadowRadius: 10, elevation: 3
+  },
+  overlayText: { color: '#fff', fontWeight: '900', fontSize: 12 },
+
+  // Rows
+  sectionTitle: { fontSize: 14, fontWeight: '900', color: '#0D2A4A', marginBottom: 8 },
+  row: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, paddingVertical: 6 },
+  rowLabel: { color: '#4E6E90', fontWeight: '700', fontSize: 12, minWidth: 110 },
+  rowValue: { color: '#0D2A4A', fontWeight: '700', fontSize: 14, flex: 1, textAlign: 'right' },
+
+  // Actions
+  actionsRow: { width: '100%', flexDirection: 'row', gap: 10, marginTop: 6 },
+  primaryBtn: {
+    flex: 1, backgroundColor: '#0288D1', paddingVertical: 14, borderRadius: 999, alignItems: 'center',
+    shadowColor: '#0288D1', shadowOpacity: 0.25, shadowOffset: { width: 0, height: 6 }, shadowRadius: 10, elevation: 4
+  },
+  primaryText: { color: '#fff', fontWeight: '900', fontSize: 14, letterSpacing: 0.3 },
+  secondaryBtn: {
+    paddingVertical: 14, paddingHorizontal: 18, borderRadius: 999, borderWidth: 1, borderColor: '#9BC6E3', backgroundColor: '#F4FAFF'
+  },
+  secondaryText: { color: '#0D2A4A', fontWeight: '800', fontSize: 14 },
+});

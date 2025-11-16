@@ -3,7 +3,7 @@
 // ฟังก์ชันสำหรับการลงทะเบียนผู้ใช้
 export const registerUser = async (formData: any) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/bregister001/register', {
+    const response = await fetch('http://192.168.1.40:8082/api/bregister001/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ export const registerUser = async (formData: any) => {
 
 export const loginUser = async (formData: any) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/login/authenticate', {
+    const response = await fetch('http://192.168.1.40:8082/api/login/authenticate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ export const loginUser = async (formData: any) => {
 // ฟังก์ชันสำหรับดึงข้อมูลเจ้าหน้าที่
 export const fetchOfficerData = async (officerId: string) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/officerMainB003/users', {
+    const response = await fetch('http://192.168.1.40:8082/api/officerMainB003/users', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export const fetchOfficerData = async (officerId: string) => {
 // 🔵 ฟังก์ชันสำหรับสร้างบิลใหม่
 export const createBill = async (billData: any) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/officerMainB003/bills', {
+    const response = await fetch('http://192.168.1.40:8082/api/officerMainB003/bills', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export const createBill = async (billData: any) => {
 // 🔵 ฟังก์ชันสำหรับดึงข้อมูลบิลของผู้ใช้งาน
 export const fetchBillInfo = async (numberId: string) => {
   try {
-    const response = await fetch(`http://10.0.2.2:8082/api/officerMainB003/Usersbills?numberId=${numberId}`, {
+    const response = await fetch(`http://192.168.1.40:8082/api/officerMainB003/Usersbills?numberId=${numberId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -111,7 +111,7 @@ export const fetchBillInfo = async (numberId: string) => {
 };
 
 export const cancelService = async (numberId: string) => {
-    const response = await fetch(`http://10.0.2.2:8082/api/officerMainB003/Cancel`, {
+    const response = await fetch(`http://192.168.1.40:8082/api/officerMainB003/Cancel`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ export const cancelService = async (numberId: string) => {
 
   // ดึงข้อมูลยืนยันการชำระเงิน
   export const fetchConfirmInfo = async (firstName: string, lastName: string) => {
-    const response = await fetch(`http://10.0.2.2:8082/api/officerMainB003/infoConfrim`, {
+    const response = await fetch(`http://192.168.1.40:8082/api/officerMainB003/infoConfrim`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ firstName, lastName }),
@@ -143,7 +143,7 @@ export const cancelService = async (numberId: string) => {
 
   // ยืนยันการชำระเงิน (API นี้จะสร้างทีหลัง)
   export const confirmPayment = async (data: { firstName: string, lastName: string }) => {
-    const response = await fetch(`http://10.0.2.2:8082/api/officerMainB003/Confrim`, {
+    const response = await fetch(`http://192.168.1.40:8082/api/officerMainB003/Confrim`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -157,7 +157,7 @@ export const cancelService = async (numberId: string) => {
   };
 
 export const addUser = async (userData: any) => {
-  const response = await fetch('http://10.0.2.2:8082/api/officerMainB003/Addusers', {
+  const response = await fetch('http://192.168.1.40:8082/api/officerMainB003/Addusers', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ export const addUser = async (userData: any) => {
 };
 
 export const fetchRedAndCancelledBills = async () => {
-  const response = await fetch('http://10.0.2.2:8082/api/technicianB004/bills/red-cancelled', {
+  const response = await fetch('http://192.168.1.40:8082/api/technicianB004/bills/red-cancelled', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ export const fetchRedAndCancelledBills = async () => {
 };
 
 export const fetchMemberInfoByNumberId = async (numberId: string) => {
-  const response = await fetch(`http://10.0.2.2:8082/api/technicianB004/member-info?numberId=${numberId}`, {
+  const response = await fetch(`http://192.168.1.40:8082/api/technicianB004/member-info?numberId=${numberId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -203,7 +203,7 @@ export const fetchMemberInfoByNumberId = async (numberId: string) => {
 };
 
 export const addHeadOfficer = async (officer: any) => {
-  const response = await fetch('http://10.0.2.2:8082/api/headMainB005/addOfficer', {
+  const response = await fetch('http://192.168.1.40:8082/api/headMainB005/addOfficer', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(officer),
@@ -215,7 +215,7 @@ export const addHeadOfficer = async (officer: any) => {
 // 🔵 ดึงรายชื่อ Officer และ Technician
 export const fetchAllHeadOfficers = async () => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/headMainB005/officers', {
+    const response = await fetch('http://192.168.1.40:8082/api/headMainB005/officers', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -234,7 +234,7 @@ export const fetchAllHeadOfficers = async () => {
 // 🔴 ลบพนักงานผ่าน numberId
 export const deleteHeadOfficer = async (numberId: string) => {
   try {
-    const response = await fetch(`http://10.0.2.2:8082/api/headMainB005/deleteOfficer?numberId=${numberId}`, {
+    const response = await fetch(`http://192.168.1.40:8082/api/headMainB005/deleteOfficer?numberId=${numberId}`, {
       method: 'POST',
     });
 
@@ -250,14 +250,14 @@ export const deleteHeadOfficer = async (numberId: string) => {
 };
 // 🔄 ดึงรายการ pending จากทั้ง request_members และ delete_members
 export const fetchPendingUsers = async () => {
-  const response = await fetch('http://10.0.2.2:8082/api/headMainB005/pendingUsers');
+  const response = await fetch('http://192.168.1.40:8082/api/headMainB005/pendingUsers');
   if (!response.ok) throw new Error('Failed to fetch pending users');
   return await response.json();
 };
 
 // ✅ Approve request สมาชิกใหม่
 export const approveRequestAPI = async (numberId: string, tag: 'Yes' | 'No') => {
-  const response = await fetch(`http://10.0.2.2:8082/api/headMainB005/approveRequest?numberId=${numberId}&tag=${tag}`, {
+  const response = await fetch(`http://192.168.1.40:8082/api/headMainB005/approveRequest?numberId=${numberId}&tag=${tag}`, {
     method: 'POST',
   });
   if (!response.ok) throw new Error('Failed to send approve request');
@@ -266,7 +266,7 @@ export const approveRequestAPI = async (numberId: string, tag: 'Yes' | 'No') => 
 
 // 🗑 จัดการลบผู้ใช้
 export const processDeleteAPI = async (numberId: string, tag: 'Yes' | 'No') => {
-  const response = await fetch(`http://10.0.2.2:8082/api/headMainB005/processDelete?numberId=${numberId}&tag=${tag}`, {
+  const response = await fetch(`http://192.168.1.40:8082/api/headMainB005/processDelete?numberId=${numberId}&tag=${tag}`, {
     method: 'POST',
   });
   if (!response.ok) throw new Error('Failed to send delete request');
@@ -274,7 +274,7 @@ export const processDeleteAPI = async (numberId: string, tag: 'Yes' | 'No') => {
 };
 
 export const updateOfficerInfo = async (payload: any) => {
-  const response = await fetch('http://10.0.2.2:8082/api/officerMainB003/updateOfficerInfo', {
+  const response = await fetch('http://192.168.1.40:8082/api/officerMainB003/updateOfficerInfo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -294,7 +294,7 @@ export const updateOfficerInfo = async (payload: any) => {
 
 // ฟังก์ชันสำหรับดึงบิลล่าสุดตาม id (แบบใช้งานจริง)
 export const fetchLatestBillById = async (id: number) => {
-  const response = await fetch(`http://10.0.2.2:8082/api/userMain006/getLatestBill?id=${id}`, {
+  const response = await fetch(`http://192.168.1.40:8082/api/userMain006/getLatestBill?id=${id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json', // ✅ ตามตัวอย่างที่คุณส่งมา
@@ -312,7 +312,7 @@ export const fetchLatestBillById = async (id: number) => {
 // ✅ 1. ดึง QR Code จาก officerId
 export const fetchQrCodeByOfficerId = async (officerId: number) => {
   try {
-    const response = await fetch(`http://10.0.2.2:8082/api/userMain006/getQrCode?officerId=${officerId}`, {
+    const response = await fetch(`http://192.168.1.40:8082/api/userMain006/getQrCode?officerId=${officerId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -333,7 +333,7 @@ export const fetchQrCodeByOfficerId = async (officerId: number) => {
 // ✅ 2. ดึงข้อมูลธนาคารจาก officerId
 export const fetchBankInfoByOfficerId = async (officerId: number) => {
   try {
-    const response = await fetch(`http://10.0.2.2:8082/api/userMain006/getBankInfo?officerId=${officerId}`, {
+    const response = await fetch(`http://192.168.1.40:8082/api/userMain006/getBankInfo?officerId=${officerId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -354,7 +354,7 @@ export const fetchBankInfoByOfficerId = async (officerId: number) => {
 // ✅ 3. อัปเดตสถานะบิล (หลังจากชำระเงิน)
 export const updateBillStatus = async (numberId: string, paymentStatus: string, cashTime: number) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/userMain006/updateBill', {
+    const response = await fetch('http://192.168.1.40:8082/api/userMain006/updateBill', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -387,7 +387,7 @@ export const submitConfirmPayment = async (payload: {
   confirmImage: string;
 }) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/userMain006/confirmBill', {
+    const response = await fetch('http://192.168.1.40:8082/api/userMain006/confirmBill', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload), // ✅ ส่ง payload ตรง ๆ
@@ -410,7 +410,7 @@ export const submitConfirmPayment = async (payload: {
 
 export const fetchBillHistory = async (numberId: string) => {
   try {
-    const response = await fetch(`http://10.0.2.2:8082/api/userMain006/getBillHistory?numberId=${numberId}`, {
+    const response = await fetch(`http://192.168.1.40:8082/api/userMain006/getBillHistory?numberId=${numberId}`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -433,7 +433,7 @@ export const fetchBillHistory = async (numberId: string) => {
 // ✅ ดึงรายละเอียดบิลจาก billId
 export const fetchBillDetail = async (billId: string | number) => {
   try {
-    const response = await fetch(`http://10.0.2.2:8082/api/userMain006/getBillDetail?billId=${billId}`, {
+    const response = await fetch(`http://192.168.1.40:8082/api/userMain006/getBillDetail?billId=${billId}`, {
       method: 'POST',
       headers: { 'Accept': 'application/json' },
     });
@@ -452,7 +452,7 @@ export const fetchBillDetail = async (billId: string | number) => {
 // ✅ ดึงข้อมูลเจ้าหน้าที่จาก officerId
 export const fetchOfficerContact = async (officerId: number) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/userMain006/getOfficerContact', {
+    const response = await fetch('http://192.168.1.40:8082/api/userMain006/getOfficerContact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ officerId }),
@@ -469,7 +469,7 @@ export const fetchOfficerContact = async (officerId: number) => {
   }
 };
 export const fetchUserDetail = async (numberId: string) => {
-  const response = await fetch(`http://10.0.2.2:8082/api/userMain006/getUserDetail?numberId=${numberId}`, {
+  const response = await fetch(`http://192.168.1.40:8082/api/userMain006/getUserDetail?numberId=${numberId}`, {
     method: 'POST',
     headers: { 'Accept': 'application/json' },
   });
@@ -484,7 +484,7 @@ export const fetchUserDetail = async (numberId: string) => {
 
 // อัปเดตข้อมูล user
 export const updateUserInfo = async (data: any) => {
-  const response = await fetch('http://10.0.2.2:8082/api/userMain006/updateUserInfo', {
+  const response = await fetch('http://192.168.1.40:8082/api/userMain006/updateUserInfo', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -495,7 +495,7 @@ export const updateUserInfo = async (data: any) => {
 
 export const deleteUser = async ({ numberId, firstName, lastName }: { numberId: string; firstName: string; lastName: string }) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/officerMainB003/Deleteusers', {
+    const response = await fetch('http://192.168.1.40:8082/api/officerMainB003/Deleteusers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ numberId, firstName, lastName }),
@@ -517,7 +517,7 @@ export const deleteUser = async ({ numberId, firstName, lastName }: { numberId: 
 
 export const requestOtp = async (email: string) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/otp007/request', {
+    const response = await fetch('http://192.168.1.40:8082/api/otp007/request', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
@@ -531,7 +531,7 @@ export const requestOtp = async (email: string) => {
 
 export const verifyOtp = async (email: string, otpCode: string) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/otp007/verify', {
+    const response = await fetch('http://192.168.1.40:8082/api/otp007/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, otpCode }),
@@ -545,7 +545,7 @@ export const verifyOtp = async (email: string, otpCode: string) => {
 
 export const resetPassword = async (email: string, newPassword: string) => {
   try {
-    const response = await fetch('http://10.0.2.2:8082/api/otp007/reset-password', {
+    const response = await fetch('http://192.168.1.40:8082/api/otp007/reset-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, newPassword }),
